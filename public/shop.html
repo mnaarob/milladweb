@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Millad's Supermarket - Shop All Products">
+    <meta name="keywords" content="Millad's, Supermarket, Halal, Meat, Groceries, Winnipeg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shop - Millad's Supermarket</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <style>
+        :root {
+            --accent-color: #2D6A4F;
+            --accent-dark: #1B4332;
+            --accent-light: #40916C;
+        }
+        
+        .primary-btn, .site-btn {
+            background: var(--accent-color);
+        }
+        
+        .primary-btn:hover, .site-btn:hover {
+            background: var(--accent-dark);
+        }
+        
+        .hero__categories__all {
+            background: var(--accent-color);
+        }
+        
+        .section-title h2:after {
+            background: var(--accent-color);
+        }
+        
+        .header__menu ul li.active a,
+        .header__menu ul li:hover>a {
+            color: var(--accent-color);
+        }
+        
+        .header__cart ul li a span,
+        .humberger__menu__cart ul li a span {
+            background: var(--accent-color);
+        }
+        
+        .hero__search__phone__icon {
+            color: var(--accent-color);
+        }
+        
+        .product__item__pic__hover li:hover a {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .footer__widget .footer__widget__social a:hover {
+            background: var(--accent-color);
+        }
+        
+        .sidebar__item ul li a:hover,
+        .sidebar__item ul li a.active {
+            color: var(--accent-color);
+        }
+        
+        .product__pagination a.active,
+        .product__pagination a:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        /* Product Item Styling */
+        .product__item {
+            margin-bottom: 30px;
+        }
+        
+        .product__item__pic {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .product__item__pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product__item__pic .product-emoji {
+            font-size: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+        
+        .product__item__text {
+            padding-top: 15px;
+        }
+        
+        .product__item__text h6 a {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .product__item__text h5 {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        .product__item__text span {
+            display: block;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        /* Sidebar Active Category */
+        .sidebar__item ul li a.active {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        /* Hero Normal */
+        .hero.hero-normal .hero__categories {
+            margin-top: 0;
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb-section {
+            padding: 60px 0;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .breadcrumb__text h2 {
+            font-size: 46px;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .breadcrumb__option a {
+            color: white;
+        }
+        
+        .breadcrumb__option span {
+            color: white;
+        }
+        
+        /* Cart Modal */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cart-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-header h3 { margin: 0; font-weight: 700; }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .cart-items {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            gap: 15px;
+        }
+        
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            background: #f8f8f8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: 600; margin-bottom: 4px; }
+        .cart-item-price { font-size: 14px; color: #666; }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .cart-item-total {
+            font-weight: 700;
+            min-width: 70px;
+            text-align: right;
+        }
+        
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            background: #f8f8f8;
+        }
+        
+        .cart-total { font-size: 18px; margin-bottom: 15px; }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .cart-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            z-index: 10001;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Filter counter */
+        .filter__found span {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+        
+        .loading i {
+            font-size: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Humberger Begin -->
+    <div class="humberger__menu__overlay"></div>
+    <div class="humberger__menu__wrapper">
+        <div class="humberger__menu__logo">
+            <a href="index.html"><h3 style="color: #2D6A4F; font-weight: 700;">Millad's</h3></a>
+        </div>
+        <div class="humberger__menu__cart">
+            <ul>
+                <li><a href="#" id="mobileCartBtn"><i class="fa fa-shopping-bag"></i> <span id="mobileCartCount">0</span></a></li>
+            </ul>
+            <div class="header__cart__price">Total: <span id="mobileCartTotal">$0.00</span></div>
+        </div>
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><a href="shop.html">Shop</a></li>
+                <li><a href="index.html#contact-info">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="mobile-menu-wrap"></div>
+        <div class="header__top__right__social">
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="#"><i class="fa fa-instagram"></i></a>
+        </div>
+        <div class="humberger__menu__contact">
+            <ul>
+                <li><i class="fa fa-envelope"></i> info@millads.ca</li>
+                <li>Pickup Available Daily</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Humberger End -->
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__left">
+                            <ul>
+                                <li><i class="fa fa-envelope"></i> info@millads.ca</li>
+                                <li>Pickup Available - 460 Notre Dame Ave, Winnipeg</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__right">
+                            <div class="header__top__right__social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                            </div>
+                            <div class="header__top__right__auth">
+                                <a href="tel:+12049479558"><i class="fa fa-phone"></i> (204) 947-9558</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a href="index.html"><h2 style="color: #2D6A4F; font-weight: 700;">Millad's</h2></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active"><a href="shop.html">Shop</a></li>
+                            <li><a href="index.html#contact-info">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__cart">
+                        <ul>
+                            <li><a href="#" id="cartBtn"><i class="fa fa-shopping-bag"></i> <span id="cartCount">0</span></a></li>
+                        </ul>
+                        <div class="header__cart__price">Total: <span id="cartTotal">$0.00</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Hero Section Begin -->
+    <section class="hero hero-normal">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="hero__categories">
+                        <div class="hero__categories__all">
+                            <i class="fa fa-bars"></i>
+                            <span>All Categories</span>
+                        </div>
+                        <ul id="heroCategories">
+                            <!-- Will be populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="hero__search">
+                        <div class="hero__search__form">
+                            <form action="#" onsubmit="return false;">
+                                <input type="text" id="searchInput" placeholder="What are you looking for?">
+                                <button type="submit" class="site-btn">SEARCH</button>
+                            </form>
+                        </div>
+                        <div class="hero__search__phone">
+                            <div class="hero__search__phone__icon">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                            <div class="hero__search__phone__text">
+                                <h5>(204) 947-9558</h5>
+                                <span>Pickup Available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Hero Section End -->
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" data-setbg="images/meat/beef-boneless.jpg" style="background: linear-gradient(rgba(27, 67, 50, 0.85), rgba(45, 106, 79, 0.85)), url('images/meat/beef-boneless.jpg') center/cover;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Millad's Shop</h2>
+                        <div class="breadcrumb__option">
+                            <a href="index.html">Home</a>
+                            <span>Shop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-5">
+                    <div class="sidebar">
+                        <div class="sidebar__item">
+                            <h4>Categories</h4>
+                            <ul id="sidebarCategories">
+                                <li><a href="#" class="active" data-category="all">All Products</a></li>
+                                <!-- Will be populated by JS -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-7">
+                    <div class="filter__item">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-5">
+                                <div class="filter__sort">
+                                    <span>Sort By</span>
+                                    <select id="sortSelect">
+                                        <option value="default">Default</option>
+                                        <option value="name-asc">Name A-Z</option>
+                                        <option value="name-desc">Name Z-A</option>
+                                        <option value="price-asc">Price Low-High</option>
+                                        <option value="price-desc">Price High-Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <div class="filter__found">
+                                    <h6><span id="productCount">0</span> Products found</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="productsGrid">
+                        <div class="loading col-12">
+                            <i class="fa fa-spinner"></i>
+                            <p>Loading products...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+
+    <!-- Footer Section Begin -->
+    <footer class="footer spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="footer__about">
+                        <div class="footer__about__logo">
+                            <a href="index.html"><h3 style="color: #2D6A4F; font-weight: 700;">Millad's Supermarket</h3></a>
+                        </div>
+                        <ul>
+                            <li>Address: 460 Notre Dame Ave, Winnipeg, MB</li>
+                            <li>Phone: (204) 947-9558</li>
+                            <li>Email: info@millads.ca</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
+                    <div class="footer__widget">
+                        <h6>Store Hours</h6>
+                        <ul>
+                            <li><a href="#">Mon - Sat: 9:00 AM - 8:00 PM</a></li>
+                            <li><a href="#">Sunday: 10:00 AM - 6:00 PM</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="#">Pickup Available</a></li>
+                            <li><a href="#">Orders ready in 2-4 hours</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <div class="footer__widget">
+                        <h6>About Us</h6>
+                        <p>Millad's Supermarket offers quality halal meat, fresh groceries, and essential pantry items. Serving Winnipeg with the finest products.</p>
+                        <div class="footer__widget__social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer__copyright">
+                        <div class="footer__copyright__text"><p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> Millad's Supermarket. All rights reserved.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h3>Your Cart</h3>
+                <button class="close-cart" id="closeCart"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <div class="empty-cart">Your cart is empty</div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total"><strong>Total: $<span id="cartTotalAmount">0.00</span></strong></div>
+                <button class="checkout-btn" onclick="alert('Checkout coming soon!')">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Js Plugins -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.nice-select.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/jquery.slicknav.js"></script>
+    <script src="js/mixitup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Global variables
+        let products = [];
+        let categories = [];
+        let cart = [];
+        let currentCategory = 'all';
+        let currentType = null;
+        let currentSearch = '';
+        let currentSort = 'default';
+        
+        // Hidden product patterns (Shan products)
+        const hiddenProductPatterns = ['shan'];
+        
+        function shouldHideProduct(product) {
+            const name = product.name.toLowerCase();
+            return hiddenProductPatterns.some(pattern => name.includes(pattern));
+        }
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const response = await fetch('products.json');
+                const data = await response.json();
+                products = data.products.filter(p => !shouldHideProduct(p));
+                categories = data.categories;
+                
+                renderCategories();
+                renderProducts();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML = '<div class="col-12 text-center"><p>Error loading products. Please refresh the page.</p></div>';
+            }
+        }
+        
+        // Render categories in sidebar
+        function renderCategories() {
+            const heroCategories = document.getElementById('heroCategories');
+            const sidebarCategories = document.getElementById('sidebarCategories');
+            
+            // Hero categories
+            heroCategories.innerHTML = categories.map(cat => 
+                `<li><a href="#" data-category="${cat.id}">${cat.name}</a></li>`
+            ).join('');
+            
+            // Sidebar categories - add after "All Products"
+            const categoryLinks = categories.map(cat => 
+                `<li><a href="#" data-category="${cat.id}">${cat.name}</a></li>`
+            ).join('');
+            sidebarCategories.innerHTML += categoryLinks;
+        }
+        
+        // Get image path
+        function getImagePath(product) {
+            if (!product.image) return null;
+            if (product.image.startsWith('meat/') || product.image.startsWith('pantry/') || product.image.startsWith('fruits/')) {
+                return 'images/' + product.image;
+            }
+            if (product.image.startsWith('images/')) {
+                return product.image;
+            }
+            // Emoji
+            if (product.image.length <= 4) {
+                return null;
+            }
+            return product.image;
+        }
+        
+        // Render products
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const countEl = document.getElementById('productCount');
+            
+            // Filter products
+            let filtered = products.filter(product => {
+                // Category filter
+                if (currentCategory !== 'all' && product.category !== currentCategory) {
+                    return false;
+                }
+                
+                // Type filter (for meat subcategories)
+                if (currentType) {
+                    const name = product.name.toLowerCase();
+                    if (!name.includes(currentType)) {
+                        return false;
+                    }
+                }
+                
+                // Search filter
+                if (currentSearch) {
+                    const searchLower = currentSearch.toLowerCase();
+                    if (!product.name.toLowerCase().includes(searchLower) && 
+                        !product.description?.toLowerCase().includes(searchLower)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+            
+            // Sort products
+            switch (currentSort) {
+                case 'name-asc':
+                    filtered.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    filtered.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'price-asc':
+                    filtered.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-desc':
+                    filtered.sort((a, b) => b.price - a.price);
+                    break;
+            }
+            
+            countEl.textContent = filtered.length;
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center"><p>No products found.</p></div>';
+                return;
+            }
+            
+            grid.innerHTML = filtered.map(product => {
+                const imagePath = getImagePath(product);
+                const hasImage = imagePath && !imagePath.startsWith('data:');
+                
+                return `
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic">
+                            ${hasImage 
+                                ? `<img src="${imagePath}" alt="${product.name}" onerror="this.parentElement.innerHTML='<div class=product-emoji>${product.fallbackEmoji || '🛒'}</div>'">`
+                                : `<div class="product-emoji">${product.fallbackEmoji || '🛒'}</div>`
+                            }
+                            <ul class="product__item__pic__hover">
+                                <li><a href="#" onclick="addToCart(${product.id}); return false;"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">${product.name}</a></h6>
+                            <span>${product.unit}</span>
+                            <h5>$${product.price.toFixed(2)}</h5>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+        
+        // Add to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            updateCartDisplay();
+            showCartNotification();
+        }
+        
+        // Update cart display
+        function updateCartDisplay() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            document.getElementById('cartCount').textContent = totalItems;
+            document.getElementById('mobileCartCount').textContent = totalItems;
+            document.getElementById('cartTotal').textContent = '$' + total.toFixed(2);
+            document.getElementById('mobileCartTotal').textContent = '$' + total.toFixed(2);
+            document.getElementById('cartTotalAmount').textContent = total.toFixed(2);
+            
+            const cartItems = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+                return;
+            }
+            
+            cartItems.innerHTML = cart.map(item => {
+                const imagePath = getImagePath(item);
+                return `
+                <div class="cart-item">
+                    <div class="cart-item-image">
+                        ${imagePath ? `<img src="${imagePath}" alt="${item.name}">` : `<span style="font-size:24px">${item.fallbackEmoji || '🛒'}</span>`}
+                    </div>
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toFixed(2)} ${item.unit}</div>
+                    </div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <div class="cart-item-total">$${(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+                `;
+            }).join('');
+        }
+        
+        // Update quantity
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (!item) return;
+            
+            item.quantity += change;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => i.id !== productId);
+            }
+            
+            updateCartDisplay();
+        }
+        
+        // Show notification
+        function showCartNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'cart-notification';
+            notification.textContent = 'Added to cart!';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            
+            // Cart modal
+            document.getElementById('cartBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('cartModal').style.display = 'flex';
+            });
+            
+            document.getElementById('mobileCartBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('cartModal').style.display = 'flex';
+            });
+            
+            document.getElementById('closeCart').addEventListener('click', () => {
+                document.getElementById('cartModal').style.display = 'none';
+            });
+            
+            document.getElementById('cartModal').addEventListener('click', (e) => {
+                if (e.target.id === 'cartModal') {
+                    document.getElementById('cartModal').style.display = 'none';
+                }
+            });
+            
+            // Category filters
+            document.addEventListener('click', (e) => {
+                if (e.target.matches('[data-category]')) {
+                    e.preventDefault();
+                    currentCategory = e.target.dataset.category;
+                    currentType = null;
+                    
+                    // Update active state
+                    document.querySelectorAll('[data-category]').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll(`[data-category="${currentCategory}"]`).forEach(el => el.classList.add('active'));
+                    
+                    // Clear type filters
+                    document.querySelectorAll('[data-type]').forEach(el => el.classList.remove('active'));
+                    
+                    renderProducts();
+                }
+                
+                if (e.target.matches('[data-type]')) {
+                    e.preventDefault();
+                    currentType = e.target.dataset.type;
+                    currentCategory = 'meat'; // Type filters only work for meat
+                    
+                    // Update active state
+                    document.querySelectorAll('[data-category]').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('[data-type]').forEach(el => el.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    renderProducts();
+                }
+            });
+            
+            // Search
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                currentSearch = e.target.value;
+                renderProducts();
+            });
+            
+            // Sort
+            document.getElementById('sortSelect').addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                renderProducts();
+            });
+        });
+    </script>
+</body>
+
+</html>

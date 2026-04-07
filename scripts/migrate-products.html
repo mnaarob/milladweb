@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Migrate Products to Supabase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #f7f7f7; }
+        h1 { color: #2D6A4F; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        button { background: #2D6A4F; color: white; border: none; padding: 10px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; margin: 4px; }
+        button:hover { background: #1B4332; }
+        .btn-danger { background: #dc3545; }
+        .btn-danger:hover { background: #c82333; }
+        #log { background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; max-height: 500px; overflow-y: auto; white-space: pre-wrap; }
+        .log-info { color: #4fc1ff; }
+        .log-ok { color: #6a9955; }
+        .log-warn { color: #dcdcaa; }
+        .log-err { color: #f44747; }
+        input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; margin: 4px; width: 100%; box-sizing: border-box; }
+        label { display: block; margin-top: 10px; font-weight: 600; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Supabase Migration Tool</h1>
+    <p>Uploads products.json data to Supabase with featured/subcategory fields.</p>
+
+    <div class="card">
+        <h3>Connection</h3>
+        <label>Supabase URL</label>
+        <input id="supabaseUrl" placeholder="https://your-project.supabase.co">
+        <label>Supabase Key (publishable or service_role)</label>
+        <input id="supabaseKey" placeholder="your-supabase-key">
+        <p style="font-size:12px;color:#666;margin-top:8px;">
+            Using the publishable key requires you to be signed in as an admin user.
+            Alternatively, use the secret/service_role key to bypass RLS.
+        </p>
+    </div>
+
+    <div class="card">
+        <h3>Sign in (if using publishable key)</h3>
+        <input id="email" placeholder="Admin email">
+        <input id="password" type="password" placeholder="Admin password">
+        <button onclick="signIn()">Sign In</button>
+        <span id="authStatus" style="margin-left:8px;font-size:13px;"></span>
+    </div>
+
+    <div class="card">
+        <h3>Actions</h3>
+        <button onclick="migrateProducts()">Migrate Products</button>
+        <button onclick="migrateCategories()">Migrate Categories</button>
+        <button class="btn-danger" onclick="clearProducts()">Clear Products Table</button>
+    </div>
+
+    <div id="log"></div>
+
+<script>
+let sb = null;
+
+function getClient() {
+    if (sb) return sb;
+    const url = document.getElementById('supabaseUrl').value.trim();
+    const key = document.getElementById('supabaseKey').value.trim();
+    sb = window.supabase.createClient(url, key);
+    return sb;
+}
+
+function log(msg, level = 'info') {
+    const el = document.getElementById('log');
+    const cls = { info: 'log-info', ok: 'log-ok', warn: 'log-warn', err: 'log-err' }[level] || '';
+    el.innerHTML += `<span class="${cls}">${msg}</span>\n`;
+    el.scrollTop = el.scrollHeight;
+}
+
+async function signIn() {
+    const client = getClient();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const status = document.getElementById('authStatus');
+    try {
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        status.textContent = 'Signed in as ' + data.user.email;
+        status.style.color = '#2D6A4F';
+        log('Signed in as ' + data.user.email, 'ok');
+    } catch (err) {
+        status.textContent = 'Sign-in failed';
+        status.style.color = '#dc3545';
+        log('Sign-in error: ' + err.message, 'err');
+    }
+}
+
+function getSubcategory(product) {
+    const name = (product.name || '').toLowerCase();
+    if (product.category !== 'meat') return product.category;
+    if (name.includes('beef') || name.includes('oxtail')) return 'beef';
+    if (name.includes('chicken') || name.includes('poultry') || name.includes('stewing')) return 'chicken';
+    if (name.includes('lamb')) return 'lamb';
+    if (name.includes('goat')) return 'lamb';
+    if (name.includes('turkey')) return 'chicken';
+    if (name.includes('fish') || name.includes('tilapia') || name.includes('mackerel') || name.includes('salmon') || name.includes('shrimp') || name.includes('prawns') || name.includes('catfish') || name.includes('croaker')) return 'seafood';
+    return 'beef';
+}
+
+async function migrateCategories() {
+    const client = getClient();
+    log('--- Starting categories migration ---', 'info');
+    try {
+        const resp = await fetch('../products.json');
+        const json = await resp.json();
+        const categories = json.categories || [];
+        log(`Found ${categories.length} categories`, 'info');
+
+        for (let i = 0; i < categories.length; i++) {
+            const cat = categories[i];
+            const row = {
+                id: cat.id,
+                name: cat.name || cat.id,
+                icon: cat.icon || '',
+                sort_order: i + 1
+            };
+            const { error } = await client.from('categories').upsert(row, { onConflict: 'id' });
+            if (error) {
+                log(`Error on category "${cat.id}": ${error.message}`, 'err');
+            } else {
+                log(`Upserted category: ${cat.id}`, 'ok');
+            }
+        }
+        log('Categories migration complete!', 'ok');
+    } catch (err) {
+        log('Categories migration failed: ' + err.message, 'err');
+    }
+}
+
+async function migrateProducts() {
+    const client = getClient();
+    log('--- Starting products migration ---', 'info');
+    try {
+        const resp = await fetch('../products.json');
+        const json = await resp.json();
+        const products = json.products || [];
+        log(`Found ${products.length} products`, 'info');
+
+        let success = 0, fail = 0;
+        for (let i = 0; i < products.length; i++) {
+            const p = products[i];
+            const row = {
+                id: String(p.id),
+                name: p.name || '',
+                category: p.category || 'others',
+                price: p.price ?? 0,
+                unit: p.unit || 'each',
+                description: p.description || '',
+                image: p.image || '',
+                fallback_emoji: p.fallbackEmoji || '🛒',
+                in_stock: p.inStock !== false,
+                featured: p.featured === true,
+                subcategory: getSubcategory(p),
+                sort_order: i + 1,
+                variable_weight: p.variableWeight || false,
+                display_price: p.displayPrice || null,
+                estimated_max_weight: p.estimatedMaxWeight || null,
+                image_width: p.imageWidth || null,
+                image_height: p.imageHeight || null,
+            };
+            const { error } = await client.from('products').upsert(row, { onConflict: 'id' });
+            if (error) {
+                log(`Error on product "${p.name}" (${p.id}): ${error.message}`, 'err');
+                fail++;
+            } else {
+                log(`Upserted: ${p.name} (${p.id})`, 'ok');
+                success++;
+            }
+        }
+        log(`Products migration complete. ${success} succeeded, ${fail} failed.`, success > 0 ? 'ok' : 'err');
+    } catch (err) {
+        log('Products migration failed: ' + err.message, 'err');
+    }
+}
+
+async function clearProducts() {
+    if (!confirm('This will DELETE all products from Supabase. Are you sure?')) return;
+    const client = getClient();
+    log('--- Clearing products table ---', 'info');
+    try {
+        const { error } = await client.from('products').delete().neq('id', '');
+        if (error) throw error;
+        log('All products deleted.', 'ok');
+    } catch (err) {
+        log('Error clearing products: ' + err.message, 'err');
+    }
+}
+</script>
+</body>
+</html>

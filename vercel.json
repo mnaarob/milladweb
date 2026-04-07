@@ -1,0 +1,62 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "framework": null,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/shop.html", "destination": "/shop", "permanent": true },
+    { "source": "/account.html", "destination": "/account", "permanent": true },
+    { "source": "/admin.html", "destination": "/admin", "permanent": true },
+    {
+      "source": "/scripts/migrate-products.html",
+      "destination": "/scripts/migrate-products",
+      "permanent": true
+    },
+    {
+      "source": "/blog/understanding-halal-meat-quality.html",
+      "destination": "/blog/understanding-halal-meat-quality",
+      "permanent": true
+    },
+    {
+      "source": "/blog/perfect-biryani-tips.html",
+      "destination": "/blog/perfect-biryani-tips",
+      "permanent": true
+    },
+    {
+      "source": "/blog/storing-fresh-meat-properly.html",
+      "destination": "/blog/storing-fresh-meat-properly",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/(css|js|img|fonts|images)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=2592000"
+        }
+      ]
+    },
+    {
+      "source": "/products.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, stale-while-revalidate=3600"
+        }
+      ]
+    }
+  ]
+}

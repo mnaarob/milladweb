@@ -1,0 +1,325 @@
+/* ==========================================================
+   Theme Overrides for Millad's Supermarket
+   Green theme applied on top of the Ogani template (style.css)
+   ========================================================== */
+
+:root {
+    --accent-color: #2D6A4F;
+    --accent-dark: #1B4332;
+    --accent-light: #40916C;
+}
+
+.primary-btn, .site-btn {
+    background: var(--accent-color);
+}
+
+.primary-btn:hover, .site-btn:hover {
+    background: var(--accent-dark);
+}
+
+.hero__categories__all {
+    background: var(--accent-color);
+}
+
+.section-title h2:after {
+    background: var(--accent-color);
+}
+
+.header__menu ul li.active a,
+.header__menu ul li:hover>a,
+.hero__text span {
+    color: var(--accent-color);
+}
+
+.featured__controls ul li.active:after,
+.featured__controls ul li:after {
+    background: var(--accent-color);
+}
+
+.header__cart__badge,
+.header__cart ul li a span,
+.humberger__menu__cart ul li a span {
+    background: var(--accent-color);
+}
+
+.hero__search__phone__icon {
+    color: var(--accent-color);
+}
+
+.featured__item__pic__hover li:hover a,
+.product__item__pic__hover li:hover a {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.footer__widget .footer__widget__social a:hover {
+    background: var(--accent-color);
+}
+
+.latest-product__item__text span {
+    color: var(--accent-color) !important;
+}
+
+.blog__item__text h5 a:hover {
+    color: var(--accent-color);
+}
+
+/* Shop pagination: centered, consistent spacing */
+#shopPagination.product__pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 24px;
+    padding-bottom: 8px;
+}
+
+#shopPagination.product__pagination a {
+    margin-right: 0;
+}
+
+.product__pagination a.active,
+.product__pagination a:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.product__pagination a.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.sidebar__item ul li a:hover,
+.sidebar__item ul li a.active {
+    color: var(--accent-color);
+}
+
+.filter__found span {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* Shop-specific product styling */
+[data-product-id] {
+    cursor: pointer;
+}
+
+.product__item {
+    margin-bottom: 30px;
+}
+
+/* Square frame from column width — full image visible (no top/bottom crop) */
+.product__item__pic {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+.featured__item__pic {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+/* Mobile: 2 products side by side — aspect-ratio keeps proportions */
+@media (max-width: 575.98px) {
+    .product__item {
+        margin-bottom: 16px;
+    }
+    .product__item__text {
+        padding-top: 8px;
+    }
+    .product__item__text h6 {
+        font-size: 13px;
+    }
+    .product__item__text h5 {
+        font-size: 14px;
+    }
+    .product__item__text span {
+        font-size: 11px;
+    }
+    .product__item__pic .product-emoji {
+        font-size: 48px;
+    }
+    .featured__item {
+        margin-bottom: 16px;
+    }
+    .featured__item__text {
+        padding-top: 8px;
+    }
+    .featured__item__text h6 {
+        font-size: 13px;
+    }
+    .featured__item__text h5 {
+        font-size: 14px;
+    }
+    .featured__item__pic .product-emoji {
+        font-size: 48px !important;
+    }
+}
+
+.product__item__pic img,
+.featured__item__pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.product__item__pic .product-emoji {
+    font-size: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.product__item__text {
+    padding-top: 15px;
+}
+
+.product__item__text h6 a {
+    color: #333;
+    font-weight: 600;
+}
+
+.product__item__text h5 {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+.product__item__text span {
+    display: block;
+    font-size: 12px;
+    color: #888;
+}
+
+.sidebar__item ul li a.active {
+    color: var(--accent-color);
+    font-weight: 700;
+}
+
+/* Hero Normal variant - compact for shop page */
+.hero.hero-normal {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.hero.hero-normal .hero__categories {
+    margin-top: 0;
+}
+
+/* Categories carousel: prevent flash during slide */
+section.categories {
+    background-color: #fff;
+}
+.categories__item {
+    background-color: #fff;
+}
+.categories .owl-stage-outer,
+.categories .owl-stage {
+    background-color: #fff;
+}
+
+/* Reduce gap above product grid on shop page */
+section.product.spad {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+/* Breadcrumb overrides - compact to reduce gap */
+.breadcrumb-section {
+    padding: 5px 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.breadcrumb__text h2 {
+    font-size: 46px;
+    color: white;
+    font-weight: 700;
+}
+
+.breadcrumb__option a {
+    color: white;
+}
+
+.breadcrumb__option span {
+    color: white;
+}
+
+/* Loading state */
+.loading {
+    text-align: center;
+    padding: 60px;
+    color: #666;
+}
+
+.loading i {
+    font-size: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg) translateZ(0); }
+    to { transform: rotate(360deg) translateZ(0); }
+}
+
+/* Blog cards: full-image link */
+.blog__item__pic a {
+    display: block;
+    height: 100%;
+}
+.blog__item__pic a img {
+    vertical-align: middle;
+}
+
+/* Footer legal links */
+.footer__copyright__links {
+    margin-top: 8px;
+    font-size: 13px;
+    text-align: center;
+}
+.footer__copyright__links a {
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.footer__copyright__links a:hover {
+    color: #2D6A4F;
+    text-decoration: underline;
+}
+.footer__copyright__sep {
+    margin: 0 8px;
+    color: #d1d5db;
+}
+
+/* Narrow viewports: avoid horizontal scroll (Bootstrap .row negative margins, wide media) */
+@media (max-width: 991.98px) {
+    html {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+    body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+    .header .container {
+        max-width: 100%;
+    }
+    .header > .container > .row {
+        max-width: 100%;
+    }
+}

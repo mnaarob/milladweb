@@ -1,0 +1,892 @@
+/* ==========================================================
+   Animations & Transitions — Butter-smooth, GPU-accelerated
+   Compositor-only: transform, opacity, filter
+   ========================================================== */
+
+/* ---- Global Performance Hints ---- */
+*,
+*::before,
+*::after {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* ---- Page Fade Transition ---- */
+body {
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.page-visible {
+    opacity: 1;
+}
+
+body.page-exit {
+    opacity: 0;
+    transition: opacity 0.22s cubic-bezier(0.4, 0, 1, 1);
+    pointer-events: none;
+}
+
+/* ---- Scroll Reveal ---- */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px) translateZ(0);
+    will-change: opacity, transform;
+    transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal--visible {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+}
+
+/* ---- Button Hover Lift ---- */
+.primary-btn,
+.site-btn {
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.primary-btn:hover,
+.site-btn:hover {
+    transform: translateY(-2px) translateZ(0) !important;
+    box-shadow: 0 6px 20px rgba(45, 106, 79, 0.3) !important;
+}
+
+.primary-btn:active,
+.site-btn:active {
+    transform: translateY(0) translateZ(0) !important;
+    box-shadow: 0 2px 8px rgba(45, 106, 79, 0.2) !important;
+    transition-duration: 0.08s !important;
+}
+
+.checkout-btn,
+.place-order-btn {
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.checkout-btn:hover,
+.place-order-btn:hover {
+    transform: translateY(-2px) translateZ(0);
+    box-shadow: 0 6px 20px rgba(45, 106, 79, 0.3);
+}
+
+.checkout-btn:active,
+.place-order-btn:active {
+    transform: translateY(0) translateZ(0);
+    transition-duration: 0.08s;
+}
+
+/* ---- Featured Item Card Hover ---- */
+.featured__item {
+    border-radius: 8px;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.featured__item:hover {
+    transform: translateY(-5px) translateZ(0);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.featured__item__pic__hover {
+    opacity: 0;
+    transform: translateY(8px) translateZ(0);
+    transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    will-change: opacity, transform;
+    bottom: 20px !important;
+}
+
+.featured__item:hover .featured__item__pic__hover {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+}
+
+.featured__item__pic__hover li a {
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.featured__item__pic__hover li a i {
+    transition: color 0.2s ease,
+                transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* ---- Shop Product Card Hover ---- */
+.product__item {
+    border-radius: 8px;
+    transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.product__item:hover {
+    transform: translateY(-5px) translateZ(0);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.product__item__pic {
+    overflow: hidden;
+}
+
+.product__item__pic img {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.product__item:hover .product__item__pic img {
+    transform: scale(1.05) translateZ(0);
+}
+
+.product__item__pic img.img-contain:hover {
+    transform: scale(1.03) translateZ(0);
+}
+
+.product__item__pic__hover {
+    opacity: 0;
+    transform: translateY(8px) translateZ(0);
+    transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    will-change: opacity, transform;
+    bottom: 20px !important;
+}
+
+.product__item:hover .product__item__pic__hover {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+}
+
+/* ---- Cart Modal Animation ---- */
+.cart-modal {
+    opacity: 0;
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.cart-modal.open {
+    opacity: 1;
+}
+
+.cart-content {
+    transform: scale(0.96) translateY(10px) translateZ(0);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.cart-modal.open .cart-content {
+    transform: scale(1) translateY(0) translateZ(0);
+    opacity: 1;
+}
+
+/* ---- Product Quick-View Modal ---- */
+.product-modal {
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.product-modal__content {
+    transform: scale(0.96) translateY(10px) translateZ(0);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.product-modal.open .product-modal__content,
+.product-modal[style*="flex"] .product-modal__content {
+    transform: scale(1) translateY(0) translateZ(0);
+    opacity: 1;
+}
+
+/* ---- Checkout Modal ---- */
+.checkout-modal {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.checkout-content {
+    transform: translateY(12px) translateZ(0);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.checkout-modal--open .checkout-content {
+    transform: translateY(0) translateZ(0);
+    opacity: 1;
+}
+
+/* ---- Hamburger Menu — GPU slide ---- */
+.humberger__menu__wrapper {
+    transform: translateX(-100%) translateZ(0) !important;
+    opacity: 1 !important;
+    left: 0 !important;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0.35s !important;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    visibility: hidden;
+}
+
+.humberger__menu__wrapper.show__humberger__menu__wrapper {
+    transform: translateX(0) translateZ(0) !important;
+    visibility: visible;
+}
+
+.humberger__menu__overlay {
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.3s !important;
+    visibility: hidden !important;
+}
+
+.humberger__menu__overlay.active {
+    opacity: 1;
+    visibility: visible !important;
+}
+
+/* ---- Header Dropdown Menus ---- */
+.header__menu ul li .header__menu__dropdown {
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0.2s !important;
+    transform: translateY(8px) translateZ(0);
+}
+
+.header__menu ul li:hover .header__menu__dropdown {
+    transform: translateY(0) translateZ(0);
+}
+
+.header__top__right__language ul {
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0.2s !important;
+    transform: translateY(8px) translateZ(0);
+}
+
+.header__top__right__language:hover ul {
+    transform: translateY(0) translateZ(0);
+}
+
+/* ---- Hero Category Toggle ---- */
+.hero__categories ul {
+    transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.25s ease;
+}
+
+/* ---- Link & Interactive State Transitions ---- */
+a {
+    transition: color 0.15s ease;
+}
+
+.sidebar__item ul li a {
+    transition: color 0.15s ease, padding-left 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sidebar__item ul li a:hover,
+.sidebar__item ul li a.active {
+    padding-left: 4px;
+}
+
+/* ---- Categories Carousel Items ---- */
+.categories__item {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.categories__item:hover {
+    transform: translateY(-3px) translateZ(0);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* ---- Footer Social Icons ---- */
+.footer__widget__social a {
+    transition: background-color 0.2s ease,
+                transform 0.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.footer__widget__social a:hover {
+    transform: translateY(-2px) translateZ(0);
+}
+
+/* ---- Cart Notification Toast ---- */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%) translateZ(0);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) translateZ(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0) translateZ(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%) translateZ(0);
+        opacity: 0;
+    }
+}
+
+.cart-notification {
+    animation: slideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.cart-notification.removing {
+    animation: slideOut 0.25s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* ---- Preloader ---- */
+@keyframes loader {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---- Loading Spinner (theme) ---- */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ---- Quantity Button Press ---- */
+.quantity-btn,
+.product-modal__qty-controls button {
+    transition: background-color 0.12s ease,
+                transform 0.12s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.quantity-btn:active,
+.product-modal__qty-controls button:active {
+    transform: scale(0.92) translateZ(0);
+}
+
+/* ---- Order History Card ---- */
+.order-history-item {
+    transition: box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.2s ease,
+                transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.order-history-item:hover {
+    transform: translateY(-2px) translateZ(0);
+}
+
+/* ---- Account Tabs ---- */
+.account-tabs li {
+    transition: color 0.2s ease,
+                background-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* ---- Account Buttons ---- */
+.acct-btn {
+    transition: background-color 0.2s ease,
+                transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.2s ease !important;
+}
+
+/* ---- Input Focus Ring ---- */
+.acct-input-group input {
+    transition: border-color 0.2s ease,
+                background-color 0.2s ease,
+                box-shadow 0.2s ease !important;
+}
+
+/* ---- Pagination ---- */
+.product__pagination a {
+    transition: background-color 0.15s ease,
+                border-color 0.15s ease,
+                color 0.15s ease,
+                transform 0.15s ease;
+}
+
+.product__pagination a:hover:not(.disabled) {
+    transform: translateY(-1px) translateZ(0);
+}
+
+/* ---- Image rendering ---- */
+img {
+    image-rendering: auto;
+}
+
+/* ---- Skeleton / Content flash prevention ---- */
+.featured__filter,
+#productsGrid {
+    min-height: 200px;
+}
+
+/* ---- Smooth overflow scrolling (iOS / mobile) ---- */
+.cart-items,
+.checkout-body,
+.humberger__menu__wrapper {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    scroll-behavior: smooth;
+}
+
+/* ==========================================================
+   Responsive Refinements — All Devices
+   320px → 480px → 576px → 768px → 992px → 1200px → 1440px+
+   Includes foldable/Galaxy Fold support
+   ========================================================== */
+
+/* --- Touch devices: remove hover delay, enhance tap targets --- */
+@media (hover: none) and (pointer: coarse) {
+    .featured__item:hover,
+    .product__item:hover,
+    .categories__item:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .featured__item__pic__hover,
+    .product__item__pic__hover {
+        opacity: 1 !important;
+        transform: translateY(0) translateZ(0) !important;
+    }
+
+    .product__item:hover .product__item__pic img {
+        transform: none !important;
+    }
+
+    .primary-btn:hover,
+    .site-btn:hover,
+    .checkout-btn:hover,
+    .place-order-btn:hover {
+        transform: none !important;
+    }
+
+    .primary-btn:active,
+    .site-btn:active,
+    .checkout-btn:active,
+    .place-order-btn:active {
+        transform: scale(0.97) translateZ(0) !important;
+        transition-duration: 0.08s !important;
+    }
+
+    a, button, [role="button"], input, select, textarea, label[for] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .featured__item__pic__hover li a,
+    .product__item__pic__hover li a {
+        min-height: 40px;
+        min-width: 40px;
+    }
+}
+
+/* --- Galaxy Fold / very narrow foldables (280px-320px) --- */
+@media only screen and (max-width: 320px) {
+    .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .hero__categories__all {
+        padding: 8px 12px 8px 16px;
+        font-size: 14px;
+    }
+
+    .hero__categories__all span {
+        font-size: 14px;
+    }
+
+    .hero__categories ul {
+        padding-left: 16px;
+    }
+
+    .hero__categories ul li a {
+        font-size: 14px;
+        line-height: 34px;
+    }
+
+    .hero__search__form {
+        height: 44px;
+    }
+
+    .hero__search__form form input {
+        height: 42px;
+        font-size: 14px;
+        padding-left: 12px;
+    }
+
+    .hero__search__form form button {
+        height: 44px;
+        padding: 0 12px;
+        font-size: 12px;
+    }
+
+    .hero__item {
+        height: auto;
+        min-height: 200px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .hero__text h2 {
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    h2 { font-size: 22px; }
+    h3 { font-size: 20px; }
+    h4 { font-size: 18px; }
+
+    .section-title {
+        margin-bottom: 28px;
+    }
+
+    .featured__controls ul li {
+        font-size: 14px;
+        margin-right: 12px;
+        margin-bottom: 8px;
+    }
+
+    .product__item__pic {
+        height: auto !important;
+        aspect-ratio: 1 / 1;
+    }
+
+    .featured__item__pic {
+        height: auto !important;
+        aspect-ratio: 1 / 1;
+    }
+
+    .product__item__text h6 { font-size: 12px !important; }
+    .product__item__text h5 { font-size: 13px !important; }
+    .product__item__text span { font-size: 10px !important; }
+
+    .cart-content {
+        width: 96%;
+        max-width: none;
+    }
+
+    .checkout-content {
+        max-width: none;
+        margin: 0 4px;
+    }
+
+    .cart-header,
+    .cart-footer {
+        padding: 12px;
+    }
+
+    .cart-items {
+        padding: 12px;
+    }
+
+    .cart-item {
+        gap: 8px;
+    }
+
+    .cart-item-image {
+        width: 44px;
+        height: 44px;
+    }
+
+    .product-modal__content {
+        max-width: 98%;
+    }
+
+    .product-modal__body {
+        padding: 10px 12px 16px;
+    }
+
+    .footer__widget {
+        margin-bottom: 20px;
+    }
+
+    .footer__copyright__text {
+        font-size: 12px;
+    }
+
+    .acct-auth-card {
+        padding: 20px 14px 18px;
+    }
+
+    .acct-welcome-banner {
+        padding: 16px 14px;
+    }
+
+    #shopPagination.product__pagination {
+        gap: 6px;
+    }
+
+    #shopPagination.product__pagination a {
+        min-width: 32px;
+        min-height: 32px;
+        font-size: 13px;
+    }
+}
+
+/* --- Small phones (321px-479px) --- */
+@media only screen and (min-width: 321px) and (max-width: 479px) {
+    .hero__item {
+        height: auto;
+        min-height: 240px;
+        padding-left: 30px;
+    }
+
+    .hero__text h2 {
+        font-size: 26px;
+        line-height: 32px;
+    }
+
+    .product__item__pic {
+        height: auto !important;
+        aspect-ratio: 1 / 1;
+    }
+
+    .featured__item__pic {
+        height: auto !important;
+        aspect-ratio: 1 / 1;
+    }
+
+    .cart-content {
+        width: 95%;
+    }
+
+    .product-modal__content {
+        max-width: 95%;
+    }
+}
+
+/* --- Standard phones (max 575px) — product grid compact --- */
+@media only screen and (max-width: 575.98px) {
+    .product__item__pic .product-emoji {
+        font-size: 44px;
+    }
+
+    .featured__item__pic .product-emoji {
+        font-size: 44px !important;
+    }
+
+    .hero__search__phone {
+        display: none;
+    }
+
+    .section-title h2 {
+        font-size: 24px;
+    }
+
+    .checkout-body {
+        padding: 14px;
+    }
+
+    .checkout-header {
+        padding: 12px 14px;
+    }
+
+    .customer-info {
+        padding: 12px;
+    }
+
+    .order-summary {
+        padding: 12px;
+    }
+
+    .payment-section {
+        padding: 12px;
+    }
+}
+
+/* --- Tablets portrait (576px-767px) --- */
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .hero__item {
+        height: auto;
+        min-height: 300px;
+        padding-left: 40px;
+    }
+
+    .hero__text h2 {
+        font-size: 32px;
+        line-height: 38px;
+    }
+
+    .product__item__pic {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .featured__item__pic {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+/* --- Tablets landscape & small laptops (768px-991px) --- */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .hero__item {
+        height: auto;
+        min-height: 350px;
+    }
+
+    .product__item__pic {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+/* --- Foldable unfolded / tablet-laptop bridge (600px-900px horizontal fold) --- */
+@media only screen and (min-width: 600px) and (max-width: 900px) and (min-aspect-ratio: 1/1) {
+    .hero__item {
+        height: auto;
+        min-height: 280px;
+        padding-left: 40px;
+    }
+
+    .featured {
+        padding-top: 50px;
+        padding-bottom: 20px;
+    }
+}
+
+/* --- Large screens (1440px+) --- */
+@media only screen and (min-width: 1440px) {
+    .container {
+        max-width: 1320px;
+    }
+
+    .hero__item {
+        height: 480px;
+    }
+
+    .featured__item__pic {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .product__item__pic {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+/* --- Ultrawide (1920px+) --- */
+@media only screen and (min-width: 1920px) {
+    .container {
+        max-width: 1440px;
+    }
+}
+
+/* --- Landscape orientation adjustments (phones) --- */
+@media only screen and (max-height: 500px) and (orientation: landscape) {
+    .hero__item {
+        height: auto;
+        min-height: 200px;
+        padding: 20px 30px;
+    }
+
+    .hero__text h2 {
+        font-size: 24px;
+        line-height: 30px;
+    }
+
+    .cart-content {
+        max-height: 90vh;
+    }
+
+    .checkout-content {
+        max-height: 95vh;
+    }
+
+}
+
+/* --- Safe area insets for notched devices --- */
+@supports (padding: env(safe-area-inset-top)) {
+    .header {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .humberger__menu__wrapper {
+        padding-top: calc(50px + env(safe-area-inset-top));
+        padding-left: calc(30px + env(safe-area-inset-left));
+    }
+
+    .footer {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .cart-modal,
+    .checkout-modal,
+    .product-modal {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* --- Reduced motion preference --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* --- Print: strip animations entirely --- */
+@media print {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

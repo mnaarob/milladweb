@@ -1,0 +1,17 @@
+# Speed up uploads — not used by `npm run build` / scripts/vercel-build.js
+node_modules
+.git
+.env
+.env.*
+*.log
+
+# Large or unused folders (main site uses root shop.html + images/, img/)
+newDesign
+public
+supabase
+docs
+
+# SQL and extra tooling — not needed on Vercel build
+scripts/*.sql
+scripts/export-products.js
+scripts/seed-products.js

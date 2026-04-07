@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store dashboard — Millad's Supermarket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-panel.css">
+    <!-- Same Turnstile site key as account.html — render=explicit so JS controls placement -->
+    <meta name="cf-turnstile-site-key" content="0x4AAAAAACydT7uGd8CNIEVo">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+</head>
+<body class="admin-body">
+    <!-- Auth loading (shown until auth state is known) -->
+    <div id="authLoading" class="auth-loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Login Section -->
+    <div id="loginSection" class="login-section" style="display:none">
+        <div class="login-card">
+            <div class="login-card__brand">
+                <span>Millad's Supermarket</span>
+                <h2>Store dashboard</h2>
+            </div>
+            <div class="login-card__body">
+                <p class="login-intro">Sign in to manage orders and products. Use the <strong>same email</strong> you were invited with.</p>
+                <form id="loginForm">
+                    <input type="email" id="adminEmail" placeholder="Your email" required autocomplete="username">
+                    <input type="password" id="adminPassword" placeholder="Password" required autocomplete="current-password">
+                    <div id="adminCaptcha" style="margin: 12px 0;"></div>
+                    <p id="adminLoginError" style="color:#e53e3e;font-size:14px;margin:0 0 8px;display:none;"></p>
+                    <button type="submit">Sign in</button>
+                </form>
+                <p class="login-footnote">Forgot your password? Use <a href="/account">My account</a> on the main site, or ask your website helper.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel (hidden until authenticated) -->
+    <div id="adminPanel" class="admin-panel">
+        <header class="admin-header">
+            <div class="admin-header-brand">
+                <a href="/">Millad's Supermarket</a>
+                <h1><i class="fas fa-leaf" aria-hidden="true"></i> Store dashboard</h1>
+            </div>
+            <div class="admin-actions">
+                <button type="button" onclick="refreshOrders()" class="btn-primary">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
+                </button>
+                <a href="/" class="btn-secondary">
+                    <i class="fas fa-store" aria-hidden="true"></i> View store
+                </a>
+                <button type="button" id="logoutBtn" class="btn-danger">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Log out
+                </button>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="admin-container">
+                <section class="admin-stats" aria-label="Store summary">
+                    <div class="stat-card">
+                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="stat-info">
+                            <h3 id="totalOrders">0</h3>
+                            <p>Total orders</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-hourglass-half"></i></div>
+                        <div class="stat-info">
+                            <h3 id="pendingOrders">0</h3>
+                            <p>Awaiting action</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-receipt"></i></div>
+                        <div class="stat-info">
+                            <h3 id="totalRevenue">$0.00</h3>
+                            <p>Order total (all time)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-sun"></i></div>
+                        <div class="stat-info">
+                            <h3 id="todayOrders">0</h3>
+                            <p>Orders today</p>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="admin-tabs-wrap">
+                    <div class="admin-tabs" role="tablist" aria-label="Dashboard sections">
+                        <button type="button" class="active" role="tab" aria-selected="true" data-tab="orders">Orders</button>
+                        <button type="button" role="tab" aria-selected="false" data-tab="products">Products</button>
+                    </div>
+                </div>
+
+                <div id="ordersTab" class="tab-content active" role="tabpanel">
+                    <div class="admin-filters" role="toolbar" aria-label="Filter orders by status">
+                        <button type="button" data-order-filter="all" class="active" onclick="filterOrders('all')">All</button>
+                        <button type="button" data-order-filter="pending" onclick="filterOrders('pending')">Pending</button>
+                        <button type="button" data-order-filter="confirmed" onclick="filterOrders('confirmed')">Confirmed</button>
+                        <button type="button" data-order-filter="ready" onclick="filterOrders('ready')">Ready</button>
+                        <button type="button" data-order-filter="completed" onclick="filterOrders('completed')">Completed</button>
+                    </div>
+                    <div class="orders-wrapper">
+                        <div id="ordersContainer">
+                            <div class="loading">Loading orders…</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="productsTab" class="tab-content" role="tabpanel">
+                    <div class="migration-link">
+                        <strong>Developer sync:</strong> Catalog from repo → <a href="/scripts/migrate-products" target="_blank" rel="noopener">Migrate tool</a>. Admin edits → <code>npm run export</code> back to <code>products.json</code>. <a href="scripts/README-SYNC.md" target="_blank" rel="noopener">Full guide</a>
+                    </div>
+                    <div class="products-toolbar">
+                        <div class="products-toolbar__fields">
+                            <input type="search" id="productSearch" placeholder="Search by name…" oninput="filterProductsList()" aria-label="Search products">
+                            <select id="productCategoryFilter" onchange="filterProductsList()" aria-label="Filter by category">
+                                <option value="">All categories</option>
+                            </select>
+                            <select id="productFeaturedFilter" onchange="filterProductsList()" aria-label="Featured filter">
+                                <option value="">All products</option>
+                                <option value="yes">Featured only</option>
+                                <option value="no">Not featured</option>
+                            </select>
+                        </div>
+                        <div class="products-toolbar__actions">
+                            <button type="button" class="btn-secondary" onclick="loadProducts()">
+                                <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
+                            </button>
+                            <button type="button" class="btn-primary" onclick="openProductModal()">
+                                <i class="fas fa-plus" aria-hidden="true"></i> Add product
+                            </button>
+                        </div>
+                    </div>
+                    <div class="products-table-wrap">
+                        <div id="productsContainer">
+                            <div class="loading">Loading products…</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Product Edit Modal -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Add Product</h3>
+                <button type="button" class="modal-close" onclick="closeProductModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="productName" required placeholder="e.g. Beef Boneless">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Price *</label>
+                            <input type="number" id="productPrice" step="0.01" min="0" required placeholder="21.99">
+                        </div>
+                        <div class="form-group">
+                            <label>Unit</label>
+                            <input type="text" id="productUnit" placeholder="per kg">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="productCategory" required>
+                                <option value="meat">Meat</option>
+                                <option value="fresh">Fresh</option>
+                                <option value="dairy">Dairy</option>
+                                <option value="bakery">Bakery</option>
+                                <option value="pantry">Pantry</option>
+                                <option value="households">Households</option>
+                                <option value="others">Others</option>
+                                <option value="oils">Oils &amp; ghee</option>
+                                <option value="spices">Spices &amp; seasonings</option>
+                                <option value="rice">Rice &amp; grains</option>
+                                <option value="beverages">Beverages</option>
+                                <option value="tea">Tea &amp; coffee</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Subcategory (for meat: beef, chicken, lamb, seafood)</label>
+                            <input type="text" id="productSubcategory" placeholder="beef, chicken, lamb, seafood">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Sort order (lower = first in shop; use 11 for vegetables after tomatoes)</label>
+                        <input type="number" id="productSortOrder" placeholder="9999" min="1">
+                        <p class="help-text">Products are grouped by category. Set 8–15 for vegetables, 1–7 for first fresh items.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Image path</label>
+                        <input type="text" id="productImage" placeholder="https://… full URL, or meat/photo.webp, or images/…">
+                        <p class="field-hint">No project folder needed: upload the photo to a public host (e.g. Supabase <strong>Storage</strong> or Cloudinary), then paste the <strong>full https://…</strong> link here.</p>
+                        <p class="help-text">Use path like meat/ProductName.webp (images/ prefix added automatically) or full path images/meat/beef.jpg. For emoji-only use the emoji character.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Fallback emoji</label>
+                        <input type="text" id="productFallbackEmoji" placeholder="🛒" maxlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="productDescription" placeholder="Product description"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><input type="checkbox" id="productInStock" checked> In stock</label>
+                        </div>
+                        <div class="form-group">
+                            <label><input type="checkbox" id="productFeatured"> Featured</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeProductModal()">Cancel</button>
+                <button type="button" class="btn-save" onclick="saveProduct()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/admin-app.js?v=4"></script>
+</body>
+</html>

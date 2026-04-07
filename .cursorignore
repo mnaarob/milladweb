@@ -1,0 +1,3 @@
+# Only tooling/output — do NOT ignore images/ (product assets should stay visible to Cursor).
+node_modules/
+dist/

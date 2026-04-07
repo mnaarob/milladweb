@@ -1,0 +1,17 @@
+{
+  "rewrites": [
+    { "source": "/shop", "destination": "/shop.html" },
+    { "source": "/account", "destination": "/account.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    {
+      "source": "/scripts/migrate-products",
+      "destination": "/scripts/migrate-products.html"
+    }
+  ],
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "type": 301 },
+    { "source": "/shop.html", "destination": "/shop", "type": 301 },
+    { "source": "/account.html", "destination": "/account", "type": 301 },
+    { "source": "/admin.html", "destination": "/admin", "type": 301 }
+  ]
+}

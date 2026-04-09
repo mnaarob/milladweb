@@ -9,7 +9,7 @@ import {
 import { initCart } from './modules/cart-ui.js?v=3';
 import { initCheckout } from './modules/checkout.js?v=3';
 import { initSearch } from './modules/search.js?v=3';
-import { initAnimations } from './modules/animations.js?v=3';
+import { initAnimations, initBlurUpImages } from './modules/animations.js?v=4';
 import { initProductModal } from './modules/product-modal.js?v=4';
 import { initAuthUI } from './modules/auth-ui.js?v=3';
 
@@ -96,6 +96,7 @@ async function rerender() {
     }
     syncFilterActiveClasses();
     syncShopUrl();
+    initBlurUpImages();
 }
 
 function renderPagination({ totalCount = 0, totalPages = 0, currentPage: page = 1 } = {}) {
@@ -190,6 +191,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await renderCategories('#heroCategories', null);
     await rerender();
+    initBlurUpImages();
 
     async function refreshCatalogFromAdmin() {
         clearCache();

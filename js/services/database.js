@@ -217,7 +217,7 @@ export async function getProducts(category = null) {
 
     // Prefer Supabase (same as production) so admin edits show on localhost; JSON is offline fallback.
     try {
-        let query = supabase.from('products').select('*').eq('store_id', STORE_ID);
+        let query = supabase.from('products').select('*').eq('store_id', STORE_ID).eq('is_published', true);
         if (category && category !== 'all') {
             query = query.eq('category', category);
         }
@@ -258,6 +258,7 @@ export async function getFeaturedProducts() {
                 .from('products')
                 .select('*')
                 .eq('store_id', STORE_ID)
+                .eq('is_published', true)
                 .eq('in_stock', true)
                 .eq('featured', true)
                 .order('sort_order')
@@ -508,6 +509,7 @@ export async function addProduct(productData) {
     row.in_stock = productData.inStock !== false;
     row.featured = productData.featured === true;
     row.sort_order = productData.sortOrder ?? 9999;
+    row.is_published = true;
 
     const { data, error } = await supabase
         .from('products')

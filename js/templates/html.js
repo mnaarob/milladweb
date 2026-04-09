@@ -53,7 +53,7 @@ export function shopProductCardTemplate(product) {
     const outOfStock = !product.inStock;
 
     const imageHtml = hasImage
-        ? `<img src="${imagePath}" alt="${product.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=product-emoji>${product.fallbackEmoji || '🛒'}</div>'">`
+        ? `<img src="${imagePath}" alt="${product.name}" loading="lazy" decoding="async" onerror="this.parentElement.innerHTML='<div class=product-emoji>${product.fallbackEmoji || '🛒'}</div>'">`
         : `<div class="product-emoji">${product.fallbackEmoji || '🛒'}</div>`;
 
     const addToCartHtml = outOfStock
@@ -87,7 +87,7 @@ export function cartItemTemplate(item) {
     const imagePath = resolveImagePath(item);
     const hasImage = imagePath && !imagePath.startsWith('data:');
     const imgHtml = hasImage
-        ? `<img src="${imagePath}" alt="${item.name}">`
+        ? `<img src="${imagePath}" alt="${item.name}" decoding="async">`
         : `<span style="font-size:24px">${item.fallbackEmoji || '🛒'}</span>`;
     const lineId = item.lineId || item.id + '|' + (item.notes || '');
     const notesHtml = item.notes

@@ -7,6 +7,7 @@
     <meta name="keywords" content="Millad's, Supermarket, Halal, Meat, Groceries, Winnipeg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="view-transition" content="same-origin">
     <title>Millad's Supermarket - Fresh Halal Meat & Groceries</title>
     <!-- Preferred homepage URL for browsers & search (shows as .../ not .../index.html) -->
     <link rel="canonical" href="https://www.milladssupermarket.com/">
@@ -261,12 +262,12 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="banner__pic">
-                        <img src="img/banner/Banner1.webp" alt="Fresh Halal Meat" loading="lazy" onerror="this.parentElement.innerHTML='<div style=background:linear-gradient(135deg,#2D6A4F,#1B4332);padding:60px;border-radius:8px;color:white><h3>Fresh Halal Meat</h3><p>Quality cuts, properly handled</p></div>'">
+                        <img src="img/banner/Banner1.webp" alt="Fresh Halal Meat" loading="eager" decoding="async" onerror="this.parentElement.innerHTML='<div style=background:linear-gradient(135deg,#2D6A4F,#1B4332);padding:60px;border-radius:8px;color:white><h3>Fresh Halal Meat</h3><p>Quality cuts, properly handled</p></div>'">
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="banner__pic">
-                        <img src="img/banner/Banner2.webp" alt="Grocery Essentials" loading="lazy" onerror="this.parentElement.innerHTML='<div style=background:linear-gradient(135deg,#40916C,#2D6A4F);padding:60px;border-radius:8px;color:white><h3>Grocery Essentials</h3><p>Spices, pantry items & more</p></div>'">
+                        <img src="img/banner/Banner2.webp" alt="Grocery Essentials" loading="eager" decoding="async" onerror="this.parentElement.innerHTML='<div style=background:linear-gradient(135deg,#40916C,#2D6A4F);padding:60px;border-radius:8px;color:white><h3>Grocery Essentials</h3><p>Spices, pantry items & more</p></div>'">
                     </div>
                 </div>
             </div>
@@ -289,7 +290,7 @@
                     <div class="blog__item">
                         <div class="blog__item__pic">
                             <a href="blog/understanding-halal-meat-quality.html" target="_blank" rel="noopener noreferrer">
-                                <img src="img/blog/blog01.jpg" alt="Understanding Halal Meat Quality" loading="lazy" onerror="this.src='images/meat/beef-boneless.jpg'">
+                                <img src="img/blog/blog01.jpg" alt="Understanding Halal Meat Quality" loading="lazy" decoding="async" onerror="this.src='images/meat/beef-boneless.jpg'">
                             </a>
                         </div>
                         <div class="blog__item__text">
@@ -302,7 +303,7 @@
                     <div class="blog__item">
                         <div class="blog__item__pic">
                             <a href="blog/perfect-biryani-tips.html" target="_blank" rel="noopener noreferrer">
-                                <img src="img/blog/blog002.jpg" alt="5 Tips for Perfect Biryani" loading="lazy" onerror="this.src='images/meat/fresh-lamb-meat.jpg'">
+                                <img src="img/blog/blog002.jpg" alt="5 Tips for Perfect Biryani" loading="lazy" decoding="async" onerror="this.src='images/meat/fresh-lamb-meat.jpg'">
                             </a>
                         </div>
                         <div class="blog__item__text">
@@ -315,7 +316,7 @@
                     <div class="blog__item">
                         <div class="blog__item__pic">
                             <a href="blog/storing-fresh-meat-properly.html" target="_blank" rel="noopener noreferrer">
-                                <img src="img/blog/blog03.jpg" alt="Storing Fresh Meat Properly" loading="lazy" onerror="this.src='images/meat/whole-chicken.jpg'">
+                                <img src="img/blog/blog03.jpg" alt="Storing Fresh Meat Properly" loading="lazy" decoding="async" onerror="this.src='images/meat/whole-chicken.jpg'">
                             </a>
                         </div>
                         <div class="blog__item__text">
@@ -543,7 +544,7 @@
     <script src="https://js.stripe.com/v3/"></script>
 
     <!-- App (ES Module) -->
-    <script type="module" src="js/app.js?v=5"></script>
+    <script type="module" src="js/app.js?v=6"></script>
 </body>
 
 </html>

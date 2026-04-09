@@ -84,6 +84,7 @@ function showLogin() {
     const adminPanel = document.getElementById('adminPanel');
     if (loginSection) loginSection.style.display = 'flex';
     if (adminPanel) adminPanel.style.display = 'none';
+    initAdminTurnstile();
 }
 
 function showAdmin() {
@@ -552,6 +553,7 @@ window.confirmDeleteProduct = function(id) {
 
 /* ── Admin Turnstile ─────────────────────────────────────────── */
 let adminWidgetId = null;
+let turnstileFailed = false;
 
 function initAdminTurnstile() {
     if (typeof turnstile === 'undefined') {
@@ -565,7 +567,8 @@ function initAdminTurnstile() {
         theme: 'light',
         size: 'normal',
         'error-callback': function () {
-            console.warn('Turnstile error on admin login — check site key and domain allowlist.');
+            turnstileFailed = true;
+            console.warn('Turnstile error on admin login — check site key and domain allowlist in Cloudflare.');
         }
     });
 }
@@ -590,8 +593,6 @@ function showAdminLoginError(msg) {
 
 /* ── DOMContentLoaded ────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-    initAdminTurnstile();
-
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -603,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showAdminLoginError('');
 
             const captchaToken = getAdminCaptchaToken();
-            if (!captchaToken) {
+            if (!captchaToken && !turnstileFailed) {
                 showAdminLoginError('Please complete the CAPTCHA verification.');
                 return;
             }

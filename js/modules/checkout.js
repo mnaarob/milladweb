@@ -3,6 +3,7 @@ import { saveOrder } from '../services/database.js?v=3';
 import { getCurrentUser } from '../services/auth.js';
 import { checkoutItemTemplate, checkoutPricingTemplate } from '../templates/html.js';
 import { closeCartModal } from './animations.js';
+import { lockBodyScroll, unlockBodyScroll } from './scroll-lock.js';
 
 const PAYMENT_HTML = {
     pickup: '<strong>Cash on pickup</strong> — pay when you collect your order at the store.',
@@ -84,36 +85,6 @@ function syncFulfillmentUI() {
     if (cashText) cashText.innerHTML = PAYMENT_HTML[mode] || PAYMENT_HTML.pickup;
 }
 
-function getScrollLockKey() {
-    return '__milladCheckoutScrollY';
-}
-
-/** Prevent background page scroll; restore on close (fixes wheel/touch going to body). */
-function lockBodyScroll() {
-    const y = window.scrollY || window.pageYOffset;
-    document.body.dataset[getScrollLockKey()] = String(y);
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${y}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
-}
-
-function unlockBodyScroll() {
-    const y = parseInt(document.body.dataset[getScrollLockKey()] || '0', 10) || 0;
-    delete document.body.dataset[getScrollLockKey()];
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    window.scrollTo(0, y);
-}
-
 function populateCheckoutItems() {
     const checkoutItemsEl = document.getElementById('checkoutItems');
     const checkoutTotalEl = document.getElementById('checkoutTotal');
@@ -135,11 +106,14 @@ async function openCheckout() {
         return;
     }
 
-    closeCartModal();
     const modal = document.getElementById('checkoutModal');
+    if (modal && modal.dataset.scrollLocked !== '1') {
+        lockBodyScroll();
+        modal.dataset.scrollLocked = '1';
+    }
+    closeCartModal();
     if (modal) {
         modal.classList.add('checkout-modal--open');
-        lockBodyScroll();
     }
 
     populateCheckoutItems();
@@ -161,8 +135,11 @@ function closeCheckout() {
     const modal = document.getElementById('checkoutModal');
     if (modal) {
         modal.classList.remove('checkout-modal--open');
+        if (modal.dataset.scrollLocked === '1') {
+            delete modal.dataset.scrollLocked;
+            unlockBodyScroll();
+        }
     }
-    unlockBodyScroll();
     resetCheckoutUI();
 }
 

@@ -82,3 +82,6 @@ dist/
 # Firebase service account key (contains secrets - never commit)
 scripts/serviceAccountKey.json
 .vercel
+
+# Image-optimization originals backup (kept locally only)
+.backup-originals/

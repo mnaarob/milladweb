@@ -1,6 +1,9 @@
 'use strict';
 
+import { lockBodyScroll, unlockBodyScroll } from './scroll-lock.js';
+
 let revealObserver = null;
+let scaleObserver = null;
 
 function applyReveal(el, delay) {
     if (el.classList.contains('reveal')) return;
@@ -13,6 +16,27 @@ function applyReveal(el, delay) {
     }
 }
 
+function applyImgScale(el) {
+    if (!el || el.dataset.imgScaleApplied === '1') return;
+    el.dataset.imgScaleApplied = '1';
+    el.classList.add('img-scale-in');
+    if (scaleObserver) {
+        scaleObserver.observe(el);
+    } else {
+        triggerImgScale(el);
+    }
+}
+
+function triggerImgScale(el) {
+    el.classList.add('img-scale-in--visible');
+    var cleanup = function () {
+        el.classList.remove('img-scale-in', 'img-scale-in--visible');
+        el.removeEventListener('animationend', cleanup);
+    };
+    el.addEventListener('animationend', cleanup);
+    setTimeout(cleanup, 600);
+}
+
 function initRevealObserver() {
     if (!('IntersectionObserver' in window)) return;
     revealObserver = new IntersectionObserver(function (entries) {
@@ -23,6 +47,15 @@ function initRevealObserver() {
             }
         });
     }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+    scaleObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                triggerImgScale(entry.target);
+                scaleObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -20px 0px' });
 }
 
 function revealStaticElements() {
@@ -52,6 +85,8 @@ function revealStaticElements() {
         applyReveal(el, idx * 0.06);
         fParents.set(p, idx + 1);
     });
+
+    document.querySelectorAll('.featured__item__pic, .product__item__pic').forEach(applyImgScale);
 }
 
 function watchDynamicGrid(gridId) {
@@ -65,6 +100,7 @@ function watchDynamicGrid(gridId) {
                 applyReveal(card, (i % 12) * 0.05);
             }
         });
+        grid.querySelectorAll('.featured__item__pic, .product__item__pic').forEach(applyImgScale);
     });
     mo.observe(grid, { childList: true });
 }
@@ -147,6 +183,9 @@ export function initAnimations() {
 export function openCartModal() {
     var modal = document.getElementById('cartModal');
     if (!modal) return;
+    if (modal.dataset.scrollLocked === '1') return;
+    lockBodyScroll();
+    modal.dataset.scrollLocked = '1';
     modal.style.display = 'flex';
     requestAnimationFrame(function () {
         requestAnimationFrame(function () { modal.classList.add('open'); });
@@ -157,6 +196,10 @@ export function closeCartModal() {
     var modal = document.getElementById('cartModal');
     if (!modal) return;
     modal.classList.remove('open');
+    if (modal.dataset.scrollLocked === '1') {
+        delete modal.dataset.scrollLocked;
+        unlockBodyScroll();
+    }
     var handler = function () {
         if (modal.classList.contains('open')) return;
         modal.style.display = 'none';

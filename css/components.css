@@ -3,6 +3,25 @@
    Cart modal, checkout modal, notifications, pricing
    ========================================================== */
 
+/* ---- SVG icons (replacement for Font Awesome 4) ----
+   Used as <svg class="icon"><use href="/img/icons.svg#icon-foo"></use></svg>.
+   `currentColor` lets icons inherit the parent text color the same way the
+   old <i class="fa fa-foo"> font glyphs did. */
+.icon {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    vertical-align: -0.125em;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+.icon--spinner {
+    animation: icon-spin 1s linear infinite;
+}
+@keyframes icon-spin {
+    to { transform: rotate(360deg); }
+}
+
 /* ---- Magic Link ---- */
 .acct-divider {
     display: flex;
@@ -259,6 +278,7 @@
     background: #fff;
     width: 100%;
     max-width: 420px;
+    max-height: 100%;
     border-radius: 12px;
     overflow: hidden;
     position: relative;
@@ -328,6 +348,11 @@
 .product-modal__body {
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding: 16px 24px 24px;
 }
 
@@ -411,6 +436,11 @@
 }
 
 @media (max-width: 575.98px) {
+    .product-modal {
+        padding: 10px;
+        padding-top: max(10px, env(safe-area-inset-top));
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
+    }
     .product-modal__header {
         min-height: 44px;
         padding: 8px 10px 6px;
@@ -1626,25 +1656,9 @@
     border-bottom: none !important;
 }
 
-.humberger__menu__wrapper .slicknav_nav a::before {
-    font-family: 'FontAwesome';
-    font-size: 18px;
-    color: var(--accent-color, #2D6A4F);
-    width: 24px;
-    text-align: center;
-}
-
-.humberger__menu__wrapper .slicknav_nav li:nth-child(1) a::before {
-    content: '\f015';
-}
-
-.humberger__menu__wrapper .slicknav_nav li:nth-child(2) a::before {
-    content: '\f07a';
-}
-
-.humberger__menu__wrapper .slicknav_nav li:nth-child(3) a::before {
-    content: '\f095';
-}
+/* Mobile-drawer menu items had Font Awesome 4 glyph indicators via ::before.
+   Dropped to remove the 76KB FontAwesome WOFF2 from the critical path; the
+   text labels (Home / Shop / Contact) are self-explanatory. */
 
 .humberger__menu__wrapper .slicknav_nav a:hover {
     color: var(--accent-color, #2D6A4F);

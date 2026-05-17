@@ -18,7 +18,7 @@ export function featuredCardTemplate(product) {
                 ${picInner}
                 <ul class="featured__item__pic__hover">
                     <li><a href="#" data-add-to-cart="${product.id}">
-                        <i class="fa fa-shopping-cart"></i>
+                        <svg class="icon icon-shopping-cart" aria-hidden="true"><use href="/img/icons.svg#icon-shopping-cart"></use></svg>
                     </a></li>
                 </ul>
             </div>
@@ -57,8 +57,8 @@ export function shopProductCardTemplate(product) {
         : `<div class="product-emoji">${product.fallbackEmoji || '🛒'}</div>`;
 
     const addToCartHtml = outOfStock
-        ? `<li><span class="out-of-stock-btn" title="Out of stock"><i class="fa fa-ban"></i></span></li>`
-        : `<li><a href="#" data-add-to-cart="${product.id}"><i class="fa fa-shopping-cart"></i></a></li>`;
+        ? `<li><span class="out-of-stock-btn" title="Out of stock"><svg class="icon icon-ban" aria-hidden="true"><use href="/img/icons.svg#icon-ban"></use></svg></span></li>`
+        : `<li><a href="#" data-add-to-cart="${product.id}"><svg class="icon icon-shopping-cart" aria-hidden="true"><use href="/img/icons.svg#icon-shopping-cart"></use></svg></a></li>`;
 
     const outOfStockBadge = outOfStock
         ? `<div class="out-of-stock-badge">Out of Stock</div>`

@@ -1,5 +1,6 @@
 import { getAllProducts } from './products.js?v=3';
 import { addToCartAndNotify } from './cart-ui.js';
+import { lockBodyScroll, unlockBodyScroll } from './scroll-lock.js';
 
 const IMAGE_PREFIXES = [
     'meat/', 'pantry/', 'dairy/', 'vegetables/', 'bakery/', 'beverages/', 'fruits/',
@@ -68,7 +69,13 @@ function openProductModal(product) {
         }
     }
 
+    if (modal.dataset.scrollLocked !== '1') {
+        lockBodyScroll();
+        modal.dataset.scrollLocked = '1';
+    }
     modal.style.display = 'flex';
+    var body = modal.querySelector('.product-modal__body');
+    if (body) body.scrollTop = 0;
     requestAnimationFrame(function () {
         requestAnimationFrame(function () {
             modal.classList.add('open');
@@ -80,6 +87,10 @@ export function closeProductModal() {
     const modal = document.getElementById('productModal');
     if (!modal) return;
     modal.classList.remove('open');
+    if (modal.dataset.scrollLocked === '1') {
+        delete modal.dataset.scrollLocked;
+        unlockBodyScroll();
+    }
     var handler = function () {
         if (modal.classList.contains('open')) return;
         modal.style.display = 'none';

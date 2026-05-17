@@ -18,10 +18,11 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
-    <!-- Css Styles -->
+    <!-- Css Styles
+         Removed font-awesome.min.css + elegant-icons.css; replaced by inline
+         SVG sprite at img/icons.svg.
+    -->
     <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
     <link rel="stylesheet" href="css/nice-select.css" type="text/css">
     <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
@@ -54,12 +55,12 @@
         </nav>
         <div id="mobile-menu-wrap"></div>
         <div class="header__top__right__social">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-instagram"></i></a>
+            <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
+            <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
         </div>
         <div class="humberger__menu__contact">
             <ul>
-                <li><i class="fa fa-envelope"></i> milladssupermarket@gmail.com</li>
+                <li><svg class="icon icon-envelope" aria-hidden="true"><use href="/img/icons.svg#icon-envelope"></use></svg> milladssupermarket@gmail.com</li>
                 <li>Pickup Available Daily</li>
             </ul>
         </div>
@@ -74,7 +75,7 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__left">
                             <ul>
-                                <li><i class="fa fa-envelope"></i> milladssupermarket@gmail.com</li>
+                                <li><svg class="icon icon-envelope" aria-hidden="true"><use href="/img/icons.svg#icon-envelope"></use></svg> milladssupermarket@gmail.com</li>
                                 <li>Pickup Available - 460 Notre Dame Ave, Winnipeg</li>
                             </ul>
                         </div>
@@ -82,11 +83,11 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
                             <div class="header__top__right__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
+                                <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
+                                <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="tel:+12049479558"><i class="fa fa-phone"></i> (204) 947-9558</a>
+                                <a href="tel:+12049479558"><svg class="icon icon-phone" aria-hidden="true"><use href="/img/icons.svg#icon-phone"></use></svg> (204) 947-9558</a>
                             </div>
                         </div>
                     </div>
@@ -101,7 +102,7 @@
                             <a href="/"><h2 style="color: #2D6A4F; font-weight: 700;">Millad's Supermarket</h2></a>
                         </div>
                         <div class="humberger__open" aria-label="Open menu" role="button" tabindex="0">
-                            <i class="fa fa-bars" aria-hidden="true"></i>
+                            <svg class="icon icon-bars" aria-hidden="true"><use href="/img/icons.svg#icon-bars"></use></svg>
                         </div>
                     </div>
                 </div>
@@ -117,14 +118,14 @@
                 <div class="col-lg-3">
                     <div class="header__cart" role="toolbar" aria-label="Cart and account">
                         <a href="#" id="cartBtn" class="header__cart__link header__cart__link--cart" aria-label="Shopping cart">
-                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                            <svg class="icon icon-shopping-bag" aria-hidden="true"><use href="/img/icons.svg#icon-shopping-bag"></use></svg>
                             <span id="cartCount" class="header__cart__badge">0</span>
                         </a>
                         <a href="/account" id="headerAccountBtn" class="header__cart__link" aria-label="My account">
-                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <svg class="icon icon-user" aria-hidden="true"><use href="/img/icons.svg#icon-user"></use></svg>
                         </a>
                         <a href="#" id="headerSignOutBtn" class="header__cart__link header__cart__link--signout" style="display:none" aria-label="Sign out">
-                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            <svg class="icon icon-sign-out" aria-hidden="true"><use href="/img/icons.svg#icon-sign-out"></use></svg>
                         </a>
                     </div>
                 </div>
@@ -140,7 +141,7 @@
                 <div class="col-lg-3">
                     <div class="hero__categories">
                         <div class="hero__categories__all">
-                            <i class="fa fa-bars"></i>
+                            <svg class="icon icon-bars" aria-hidden="true"><use href="/img/icons.svg#icon-bars"></use></svg>
                             <span>All Categories</span>
                         </div>
                         <ul id="heroCategories">
@@ -158,7 +159,7 @@
                         </div>
                         <div class="hero__search__phone">
                             <div class="hero__search__phone__icon">
-                                <i class="fa fa-phone"></i>
+                                <svg class="icon icon-phone" aria-hidden="true"><use href="/img/icons.svg#icon-phone"></use></svg>
                             </div>
                             <div class="hero__search__phone__text">
                                 <h5>(204) 947-9558</h5>
@@ -200,7 +201,7 @@
                     </div>
                     <div class="row" id="productsGrid">
                         <div class="loading col-12">
-                            <i class="fa fa-spinner"></i>
+                            <svg class="icon icon-spinner" aria-hidden="true"><use href="/img/icons.svg#icon-spinner"></use></svg>
                             <p>Loading products...</p>
                         </div>
                     </div>
@@ -251,8 +252,8 @@
                         <h6>About Us</h6>
                         <p>Millad's Supermarket offers quality halal meat, fresh groceries, and essential pantry items. Serving Winnipeg with the finest products.</p>
                         <div class="footer__widget__social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
+                            <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
                         </div>
                     </div>
                 </div>
@@ -277,7 +278,7 @@
     <div class="product-modal" id="productModal">
         <div class="product-modal__content">
             <div class="product-modal__header">
-                <button type="button" class="product-modal__close" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                <button type="button" class="product-modal__close" aria-label="Close"><svg class="icon icon-times" aria-hidden="true"><use href="/img/icons.svg#icon-times"></use></svg></button>
             </div>
             <div class="product-modal__body">
                 <div class="product-modal__img"></div>
@@ -310,7 +311,7 @@
         <div class="cart-content">
             <div class="cart-header">
                 <h3>Your Cart</h3>
-                <button class="close-cart" id="closeCart"><i class="fa fa-times"></i></button>
+                <button class="close-cart" id="closeCart"><svg class="icon icon-times" aria-hidden="true"><use href="/img/icons.svg#icon-times"></use></svg></button>
             </div>
             <div class="cart-items" id="cartItems">
                 <div class="empty-cart">Your cart is empty</div>
@@ -327,7 +328,7 @@
         <div class="checkout-content">
             <div class="checkout-header">
                 <h3>Checkout</h3>
-                <button class="close-checkout" id="closeCheckoutBtn"><i class="fa fa-times"></i></button>
+                <button class="close-checkout" id="closeCheckoutBtn"><svg class="icon icon-times" aria-hidden="true"><use href="/img/icons.svg#icon-times"></use></svg></button>
             </div>
             <div class="checkout-body">
                 <form id="checkout-form">
@@ -338,7 +339,7 @@
                         <input type="tel" id="customerPhone" placeholder="Phone Number" required>
                         <input type="email" id="customerEmail" placeholder="Email for receipt (optional)" autocomplete="email">
                         <div class="pickup-notice" id="pickupLocationBlock">
-                            <i class="fa fa-map-marker"></i>
+                            <svg class="icon icon-map-marker" aria-hidden="true"><use href="/img/icons.svg#icon-map-marker"></use></svg>
                             <div>
                                 <strong>Pickup location:</strong><br>
                                 Millad's Supermarket<br>
@@ -373,7 +374,7 @@
                             <p class="delivery-hint">We'll call you to confirm delivery time and any applicable fee. Delivery is within Winnipeg only.</p>
                         </div>
                         <div class="checkout-weight-notice" role="note">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            <svg class="icon icon-info-circle" aria-hidden="true"><use href="/img/icons.svg#icon-info-circle"></use></svg>
                             <div>
                                 <strong>Items sold by weight</strong>
                                 <p>Fresh meat, fish, and produce (for example beef, chicken, ginger, tomatoes) are weighed at the store. The amount you receive may be a little more or less than what you ordered. Your <strong>final total is set when we prepare your order</strong> — staff will adjust it before you pay.</p>
@@ -398,14 +399,14 @@
                     <div class="payment-section">
                         <h4>Payment</h4>
                         <p class="cash-payment-notice">
-                            <i class="fa fa-money" aria-hidden="true"></i>
+                            <svg class="icon icon-money" aria-hidden="true"><use href="/img/icons.svg#icon-money"></use></svg>
                             <span id="cashPaymentText"><strong>Cash on pickup</strong> — pay when you collect your order at the store.</span>
                         </p>
                     </div>
                     <button type="submit" class="place-order-btn">Place Order</button>
                 </form>
                 <div id="checkoutSuccess" class="checkout-success" hidden role="status" aria-live="polite">
-                    <div class="checkout-success__icon" aria-hidden="true"><i class="fa fa-check-circle"></i></div>
+                    <div class="checkout-success__icon" aria-hidden="true"><svg class="icon icon-check-circle" aria-hidden="true"><use href="/img/icons.svg#icon-check-circle"></use></svg></div>
                     <h4 class="checkout-success__title">Order confirmed</h4>
                     <p id="checkoutSuccessMessage" class="checkout-success__message"></p>
                     <p id="checkoutSuccessOrderRef" class="checkout-success__ref" hidden></p>

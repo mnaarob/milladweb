@@ -285,9 +285,12 @@ ol {
 	display: none;
 }
 
-.header__top__left ul li i {
+.header__top__left ul li i,
+.header__top__left ul li .icon {
 	color: #252525;
-	margin-right: 5px;
+	margin-right: 7px;
+	font-size: 15px;
+	vertical-align: -2px;
 }
 
 .header__top__right {
@@ -402,8 +405,11 @@ ol {
 	color: #1c1c1c;
 }
 
-.header__top__right__auth a i {
-	margin-right: 6px;
+.header__top__right__auth a i,
+.header__top__right__auth a .icon {
+	margin-right: 7px;
+	font-size: 15px;
+	vertical-align: -2px;
 }
 
 .header__logo {
@@ -587,7 +593,8 @@ ol {
 	cursor: pointer;
 }
 
-.hero__categories__all i {
+.hero__categories__all i,
+.hero__categories__all .icon {
 	font-size: 16px;
 	color: #ffffff;
 	margin-right: 10px;
@@ -603,9 +610,9 @@ ol {
 	position: absolute;
 	right: 18px;
 	top: 9px;
-	content: "3";
-	font-family: "ElegantIcons";
+	content: "\25BE"; /* unicode down-triangle, replaces ElegantIcons "3" glyph */
 	font-size: 18px;
+	line-height: 1;
 	color: #ffffff;
 }
 

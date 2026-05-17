@@ -36,36 +36,21 @@
     /*------------------
         Background Set — lazy load via IntersectionObserver for below-the-fold
         elements (e.g. category tiles) so we don't download all background
-        images on page load. The above-the-fold hero (.hero__item) is loaded
-        immediately so its image (the LCP) is not delayed.
-
-        For the hero (.hero__item) we pick a responsive variant from the same
-        breakpoints used by the <link rel="preload" imagesrcset> tag, so the
-        browser hits its preload cache instead of fetching a second copy.
+        images on page load. The hero on the homepage is now a real
+        <picture>/<img> element with fetchpriority=high so it does not need a
+        background-image swap; only category tiles and breadcrumbs use this.
     --------------------*/
-    function heroVariantFor(bg) {
-        // Only rewrite our hero pattern (images/meat/heroimage2.webp). Other
-        // background-image paths pass through unchanged.
-        if (!/heroimage2\.webp$/.test(bg)) return bg;
-        var w = window.innerWidth || document.documentElement.clientWidth || 1024;
-        var dpr = window.devicePixelRatio || 1;
-        var effective = w * dpr;
-        if (effective <= 640) return bg.replace(/heroimage2\.webp$/, 'heroimage2-640.webp');
-        if (effective <= 1024) return bg.replace(/heroimage2\.webp$/, 'heroimage2-1024.webp');
-        return bg;
-    }
-
     function applyBg($el) {
         if ($el.attr('data-bg-applied') === '1') return;
         var bg = $el.data('setbg');
         if (!bg) return;
-        if ($el.hasClass('hero__item')) bg = heroVariantFor(bg);
         $el.css('background-image', 'url(' + bg + ')');
         $el.attr('data-bg-applied', '1');
     }
 
-    // Eagerly load above-the-fold hero so it competes with no other downloads.
-    $('.hero__item.set-bg, .breadcrumb__item.set-bg').each(function () {
+    // Eagerly load the shop/account/blog breadcrumb hero (it is above the fold
+    // on those pages). The homepage hero is now an <img> and handles itself.
+    $('.breadcrumb__item.set-bg').each(function () {
         applyBg($(this));
     });
 
@@ -116,24 +101,71 @@
     });
 
     /*------------------
-		Navigation — slicknav builds the mobile-menu drawer.
-	--------------------*/
-    if (typeof $.fn.slicknav === 'function') {
+        Navigation — slicknav builds the mobile-menu drawer.
+        Deferred to first hamburger interaction OR to requestIdleCallback so
+        it doesn't block initial render. slicknav fires a synchronous layout
+        pass that costs ~30 ms TBT on mobile.
+    --------------------*/
+    var slicknavInitialized = false;
+    function initSlicknav() {
+        if (slicknavInitialized) return;
+        if (typeof $.fn.slicknav !== 'function') return;
+        slicknavInitialized = true;
         $(".mobile-menu").slicknav({
             prependTo: '#mobile-menu-wrap',
             allowParentLinks: true
         });
     }
+    // Init lazily: on first hamburger click, or after the browser is idle.
+    $(document).one('click', '.humberger__open', initSlicknav);
+    if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(initSlicknav, { timeout: 4000 });
+    } else {
+        setTimeout(initSlicknav, 2500);
+    }
 
     /*-----------------------
-        Categories Slider — requires owl.carousel. Skip gracefully when absent.
+        Owl Carousels — init lazily when each carousel scrolls into view, so
+        the page's first frame doesn't pay for the layout pass over carousels
+        that may be below the fold. The categories slider is usually
+        partially visible so it inits almost immediately, but the product/
+        details sliders only init on real demand.
     ------------------------*/
     var hasOwl = typeof $.fn.owlCarousel === 'function';
     var owlNavText = [
         '<svg class="icon icon-angle-left" aria-hidden="true"><use href="/img/icons.svg#icon-angle-left"></use></svg>',
         '<svg class="icon icon-angle-right" aria-hidden="true"><use href="/img/icons.svg#icon-angle-right"></use></svg>'
     ];
-    if (hasOwl) $(".categories__slider").owlCarousel({
+
+    var owlInitObserver = null;
+    function lazyOwl(selector, config) {
+        if (!hasOwl) return;
+        var $el = $(selector);
+        if (!$el.length) return;
+        function init() {
+            if ($el.attr('data-owl-init') === '1') return;
+            $el.attr('data-owl-init', '1');
+            $el.owlCarousel(config);
+        }
+        if (!('IntersectionObserver' in window)) { init(); return; }
+        if (!owlInitObserver) {
+            owlInitObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        var fn = entry.target.__owlInit;
+                        if (typeof fn === 'function') fn();
+                        owlInitObserver.unobserve(entry.target);
+                    }
+                });
+            }, { rootMargin: '200px 0px' });
+        }
+        $el.each(function () {
+            this.__owlInit = init;
+            owlInitObserver.observe(this);
+        });
+    }
+
+    lazyOwl('.categories__slider', {
         loop: true,
         margin: 0,
         items: 4,
@@ -146,27 +178,14 @@
         autoHeight: false,
         autoplay: true,
         responsive: {
-
-            0: {
-                items: 1,
-            },
-
-            480: {
-                items: 2,
-            },
-
-            768: {
-                items: 3,
-            },
-
-            992: {
-                items: 4,
-            }
+            0: { items: 1 },
+            480: { items: 2 },
+            768: { items: 3 },
+            992: { items: 4 }
         }
     });
 
     $(".categories__slider").on('initialized.owl.carousel translated.owl.carousel', function () {
-        // owl-carousel clones slides; observe new clones so their bg loads on view.
         $(this).find('.categories__item.set-bg').each(function () {
             if ($(this).attr('data-bg-applied') === '1') return;
             if (bgObserver) bgObserver.observe(this);
@@ -175,66 +194,58 @@
     });
 
 
-    $('.hero__categories__all').on('click', function(){
-        $('.hero__categories ul').slideToggle(400);
+    // Categories dropdown — CSS-class toggle (no jQuery animation reads layout
+    // synchronously, which was costing ~100 ms of forced reflow in PSI).
+    // The .hero__categories--open class triggers a max-height + opacity
+    // transition declared in css/style.css.
+    $('.hero__categories__all').on('click', function () {
+        $(this).closest('.hero__categories').toggleClass('hero__categories--open');
     });
 
-    // Close the categories dropdown after the user picks one. On the shop page
-    // the category click is handled by client-side filtering (no full reload),
-    // so without this the absolute-positioned <ul> stays open over the product
-    // grid. Using slideUp keeps the open/close animation consistent.
+    // Close the dropdown after a category is picked (shop page client-side
+    // filtering doesn't reload so the absolute-positioned <ul> would stick
+    // around otherwise).
     $(document).on('click', '.hero__categories ul a', function () {
-        $(this).closest('.hero__categories').find('ul').slideUp(300);
+        $(this).closest('.hero__categories').removeClass('hero__categories--open');
     });
 
-    if (hasOwl) {
-        /*--------------------------
-            Latest Product Slider
-        ----------------------------*/
-        $(".latest-product__slider").owlCarousel({
-            loop: true,
-            margin: 0,
-            items: 1,
-            dots: false,
-            nav: true,
-            navText: owlNavText,
-            smartSpeed: 1200,
-            autoHeight: false,
-            autoplay: true
-        });
+    lazyOwl('.latest-product__slider', {
+        loop: true,
+        margin: 0,
+        items: 1,
+        dots: false,
+        nav: true,
+        navText: owlNavText,
+        smartSpeed: 1200,
+        autoHeight: false,
+        autoplay: true
+    });
 
-        /*-----------------------------
-            Product Discount Slider
-        -------------------------------*/
-        $(".product__discount__slider").owlCarousel({
-            loop: true,
-            margin: 0,
-            items: 3,
-            dots: true,
-            smartSpeed: 1200,
-            autoHeight: false,
-            autoplay: true,
-            responsive: {
-                320: { items: 1 },
-                480: { items: 2 },
-                768: { items: 2 },
-                992: { items: 3 }
-            }
-        });
+    lazyOwl('.product__discount__slider', {
+        loop: true,
+        margin: 0,
+        items: 3,
+        dots: true,
+        smartSpeed: 1200,
+        autoHeight: false,
+        autoplay: true,
+        responsive: {
+            320: { items: 1 },
+            480: { items: 2 },
+            768: { items: 2 },
+            992: { items: 3 }
+        }
+    });
 
-        /*---------------------------------
-            Product Details Pic Slider
-        ----------------------------------*/
-        $(".product__details__pic__slider").owlCarousel({
-            loop: true,
-            margin: 20,
-            items: 4,
-            dots: true,
-            smartSpeed: 1200,
-            autoHeight: false,
-            autoplay: true
-        });
-    }
+    lazyOwl('.product__details__pic__slider', {
+        loop: true,
+        margin: 20,
+        items: 4,
+        dots: true,
+        smartSpeed: 1200,
+        autoHeight: false,
+        autoplay: true
+    });
 
     /*-----------------------
         Price Range Slider — only runs on pages that include the .price-range

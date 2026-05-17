@@ -8,8 +8,16 @@
     <meta name="view-transition" content="same-origin">
     <title>Understanding Halal Meat Quality | Millad's Supermarket</title>
     <link rel="canonical" href="https://www.milladssupermarket.com/blog/understanding-halal-meat-quality">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="preload" as="font" type="font/woff2" href="../fonts/cairo/cairo-var.woff2" crossorigin>
     <style>
+        @font-face{
+          font-family:'Cairo';
+          font-style:normal;
+          font-weight:400 1000;
+          font-display:swap;
+          src:url('../fonts/cairo/cairo-var.woff2') format('woff2-variations'),
+              url('../fonts/cairo/cairo-var.woff2') format('woff2');
+        }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {

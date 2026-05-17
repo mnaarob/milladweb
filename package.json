@@ -11,5 +11,10 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2"
+  },
+  "devDependencies": {
+    "csso-cli": "^4.0.2",
+    "esbuild": "^0.28.0",
+    "purgecss": "^8.0.0"
   }
 }

@@ -10,13 +10,22 @@
     <meta name="view-transition" content="same-origin">
     <title>Shop - Millad's Supermarket</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://js.stripe.com">
+    <link rel="preload" as="font" type="font/woff2" href="fonts/cairo/cairo-var.woff2" crossorigin>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    <!-- Self-hosted Cairo variable font (latin subset). Single 33KB woff2
+         covers every weight; replaces the render-blocking Google Fonts CSS. -->
+    <style>
+    @font-face{
+      font-family:'Cairo';
+      font-style:normal;
+      font-weight:400 1000;
+      font-display:swap;
+      src:url('fonts/cairo/cairo-var.woff2') format('woff2-variations'),
+          url('fonts/cairo/cairo-var.woff2') format('woff2');
+    }
+    </style>
 
     <!-- Css Styles
          Removed font-awesome.min.css + elegant-icons.css; replaced by inline

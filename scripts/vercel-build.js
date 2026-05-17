@@ -46,3 +46,9 @@ if (fs.existsSync(migrateSrc)) {
 }
 
 console.log('vercel-build: output ->', dist);
+
+// Post-process: concat+purge+minify CSS, minify JS, rewrite index.html.
+const { execSync } = require('child_process');
+execSync('node ' + JSON.stringify(path.join(__dirname, 'build-assets.js')), {
+    stdio: 'inherit',
+});

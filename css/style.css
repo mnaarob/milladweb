@@ -573,13 +573,29 @@ ol {
 }
 
 .hero.hero-normal .hero__categories ul {
-	display: none;
+	display: block;
 	position: absolute;
 	left: 0;
 	top: 46px;
 	width: 100%;
 	z-index: 9;
 	background: #ffffff;
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	visibility: hidden;
+	transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+	            opacity 0.25s ease,
+	            visibility 0s linear 0.35s;
+}
+
+.hero.hero-normal .hero__categories.hero__categories--open ul {
+	max-height: 800px;
+	opacity: 1;
+	visibility: visible;
+	transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+	            opacity 0.25s ease,
+	            visibility 0s;
 }
 
 .hero.hero-normal .hero__search {
@@ -728,10 +744,33 @@ ol {
 }
 
 .hero__item {
+	position: relative;
 	height: 431px;
 	display: flex;
 	align-items: center;
 	padding-left: 75px;
+	overflow: hidden;
+	isolation: isolate;
+}
+
+.hero__media {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	display: block;
+	pointer-events: none;
+}
+
+.hero__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.hero__item .hero__text {
+	position: relative;
+	z-index: 1;
 }
 
 .hero__text span {

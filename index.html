@@ -12,23 +12,55 @@
     <!-- Preferred homepage URL for browsers & search (shows as .../ not .../index.html) -->
     <link rel="canonical" href="https://www.milladssupermarket.com/">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="image"
           imagesrcset="images/meat/heroimage2-640.webp 640w, images/meat/heroimage2-1024.webp 1024w, images/meat/heroimage2.webp 1600w"
-          imagesizes="100vw"
+          imagesizes="(max-width: 991px) 100vw, 75vw"
           href="images/meat/heroimage2.webp"
           fetchpriority="high">
+    <link rel="preload" as="font" type="font/woff2" href="fonts/cairo/cairo-var.woff2" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
-
     <!-- Critical CSS: hand-curated above-the-fold styles, inlined so first paint
-         does not wait on the seven async stylesheets below. Keep bootstrap.min.css
-         blocking so the grid is available before async CSS arrives. -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+         does not wait on the eight async stylesheets below. We also inline a
+         minimal Bootstrap grid subset covering only the classes index.html
+         uses (.container, .row, .col-*, .offset-lg-1) so the full
+         bootstrap.min.css can load async without breaking layout. -->
     <style>
+    /* Self-hosted Cairo variable font (latin subset, weights 400-1000).
+       Single 33KB woff2 covers every weight used on the site. font-display:swap
+       lets fallback text render immediately and avoids the Google Fonts CSS
+       round-trip that was render-blocking. */
+    @font-face{
+      font-family:'Cairo';
+      font-style:normal;
+      font-weight:400 1000;
+      font-display:swap;
+      src:url('fonts/cairo/cairo-var.woff2') format('woff2-variations'),
+          url('fonts/cairo/cairo-var.woff2') format('woff2');
+    }
+    /* Bootstrap-grid subset (homepage scope) */
+    .container{width:100%;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
+    @media (min-width:576px){.container{max-width:540px}}
+    @media (min-width:768px){.container{max-width:720px}}
+    @media (min-width:992px){.container{max-width:960px}}
+    @media (min-width:1200px){.container{max-width:1140px}}
+    .row{display:flex;flex-wrap:wrap;margin-right:-15px;margin-left:-15px}
+    .col-12,.col-lg-3,.col-lg-4,.col-lg-6,.col-lg-9,.col-lg-12,.col-md-4,.col-md-6,.col-md-12,.col-sm-6{position:relative;width:100%;padding-right:15px;padding-left:15px}
+    .col-12{flex:0 0 100%;max-width:100%}
+    @media (min-width:576px){.col-sm-6{flex:0 0 50%;max-width:50%}}
+    @media (min-width:768px){
+      .col-md-4{flex:0 0 33.333333%;max-width:33.333333%}
+      .col-md-6{flex:0 0 50%;max-width:50%}
+      .col-md-12{flex:0 0 100%;max-width:100%}
+    }
+    @media (min-width:992px){
+      .col-lg-3{flex:0 0 25%;max-width:25%}
+      .col-lg-4{flex:0 0 33.333333%;max-width:33.333333%}
+      .col-lg-6{flex:0 0 50%;max-width:50%}
+      .col-lg-9{flex:0 0 75%;max-width:75%}
+      .col-lg-12{flex:0 0 100%;max-width:100%}
+      .offset-lg-1{margin-left:8.333333%}
+    }
     /* reset + body */
     *,*::before,*::after{box-sizing:border-box}
     html,body{height:100%}
@@ -95,8 +127,10 @@
     .hero__search__phone__icon{width:42px;height:42px;background:#f5f5f5;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent-color)}
     .hero__search__phone__text h5{font-size:18px;color:#252525;margin:0}
     .hero__search__phone__text span{font-size:13px;color:#6f6f6f}
-    .hero__item{min-height:430px;background-size:cover;background-position:center;background-repeat:no-repeat;display:flex;align-items:center;padding:50px 60px;background-color:#1f3b2a}
-    .hero__item .hero__text{max-width:540px}
+    .hero__item{position:relative;min-height:430px;display:flex;align-items:center;padding:50px 60px;background-color:#1f3b2a;overflow:hidden;isolation:isolate}
+    .hero__media{position:absolute;inset:0;z-index:0;display:block;pointer-events:none}
+    .hero__media img{width:100%;height:100%;object-fit:cover;display:block}
+    .hero__item .hero__text{position:relative;z-index:1;max-width:540px}
     .hero__item .hero__text span{font-size:13px;letter-spacing:2px;display:inline-block;margin-bottom:12px}
     .hero__item .hero__text h2{font-size:46px;font-weight:700;margin:8px 0 12px;line-height:1.1}
     .hero__item .hero__text p{margin-bottom:24px;font-size:16px}
@@ -112,6 +146,7 @@
     <!-- Non-critical stylesheets are deferred via the preload + onload pattern so
          they no longer block the LCP. They upgrade-paint cleanly once they arrive.
          <noscript> ensures users without JS still get full styling. -->
+    <link rel="preload" href="css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/theme.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/components.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -120,6 +155,7 @@
     <link rel="preload" href="css/owl.carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/slicknav.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/theme.css">
         <link rel="stylesheet" href="css/components.css">
@@ -266,7 +302,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero__item set-bg" data-setbg="images/meat/heroimage2.webp">
+                    <div class="hero__item">
+                        <picture class="hero__media">
+                            <source type="image/webp"
+                                    srcset="images/meat/heroimage2-640.webp 640w, images/meat/heroimage2-1024.webp 1024w, images/meat/heroimage2.webp 1600w"
+                                    sizes="(max-width: 991px) 100vw, 75vw">
+                            <img src="images/meat/heroimage2.webp"
+                                 width="1600" height="900"
+                                 alt=""
+                                 fetchpriority="high"
+                                 decoding="async">
+                        </picture>
                         <div class="hero__text">
                             <span style="color: #eef1e9;">HALAL CERTIFIED</span>
                             <h2 style="color: #eef1e9; font-weight: 700;">Fresh Meat <br />& Groceries</h2>

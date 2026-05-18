@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin-panel.css">
+    <link rel="stylesheet" href="css/ui-buttons.css">
     <!-- Same Turnstile site key as account.html — render=explicit so JS controls placement -->
     <meta name="cf-turnstile-site-key" content="0x4AAAAAAC2jgZJeH_O9-7Xl">
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
@@ -56,9 +57,12 @@
                 <a href="/" class="btn-secondary">
                     <i class="fas fa-store" aria-hidden="true"></i> View store
                 </a>
-                <button type="button" id="logoutBtn" class="btn-danger">
-                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Log out
-                </button>
+                <span class="header__cart" style="padding:0;width:auto;">
+                    <button type="button" id="logoutBtn" class="signout-link" aria-label="Log out">
+                        <span class="tooltip" aria-hidden="true">Log out</span>
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                    </button>
+                </span>
             </div>
         </header>
 

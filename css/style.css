@@ -298,6 +298,8 @@ ol {
 	padding: 10px 0 13px;
 }
 
+/* Legacy header-top social icon styles — superseded by css/ui-buttons.css (Uiverse circles).
+   Kept commented for reference.
 .header__top__right__social {
 	position: relative;
 	display: inline-block;
@@ -325,6 +327,7 @@ ol {
 .header__top__right__social a:last-child {
 	margin-right: 0;
 }
+*/
 
 .header__top__right__language {
 	position: relative;
@@ -2724,6 +2727,8 @@ ol {
 	height: 100%;
 }
 
+/* Legacy footer social icon styles — superseded by css/ui-buttons.css (Uiverse circles).
+   Kept commented for reference.
 .footer__widget .footer__widget__social a {
 	display: inline-block;
 	height: 41px;
@@ -2751,6 +2756,7 @@ ol {
 	color: #ffffff;
 	border-color: #ffffff;
 }
+*/
 
 /* Store hours + pickup — responsive (avoids 50% float columns on narrow screens) */
 .footer__widget--hours {

@@ -86,9 +86,11 @@
     .header__top__left ul li{font-size:14px;color:#1c1c1c;display:inline-block;margin-right:45px;position:relative}
     .header__top__left ul li:last-child{margin-right:0}
     .header__top__right{text-align:right;padding:10px 0 13px}
-    .header__top__right__social{display:inline-block;margin-right:35px}
-    .header__top__right__social a{font-size:14px;display:inline-block;color:#1c1c1c;margin-right:20px}
-    .header__top__right__social a:last-child{margin-right:0}
+    /* Uiverse circle buttons — critical preview (full rules in css/ui-buttons.css) */
+    .header__top__right__social,.footer__widget .footer__widget__social,.header__cart,.social{display:inline-flex;list-style:none;justify-content:center;align-items:center;gap:14px;padding:0;margin:0}
+    .header__top__right__social>a,.footer__widget .footer__widget__social>a,.header__cart>a,.social>a{position:relative;background:#fff;border-radius:50%;width:50px;height:50px;display:inline-flex;align-items:center;justify-content:center;color:#1c1c1c;text-decoration:none;box-shadow:0 10px 10px rgba(0,0,0,.1);transition:all .2s cubic-bezier(.68,-.55,.265,1.55)}
+    .header__top__right__social>a>.icon,.footer__widget .footer__widget__social>a>.icon,.header__cart>a>.icon,.social>a>.icon{width:1.1em;height:1.1em;fill:currentColor}
+    .header__top__right__social>a>.tooltip,.footer__widget .footer__widget__social>a>.tooltip,.header__cart>a>.tooltip,.social>a>.tooltip{opacity:0;pointer-events:none}
     .header__top__right__auth{display:inline-block}
     .header__top__right__auth a{display:block;font-size:14px;color:#1c1c1c}
     /* header main */
@@ -100,9 +102,8 @@
     .header__menu ul li:last-child{margin-right:0}
     .header__menu ul li a{font-size:14px;font-weight:700;color:#1c1c1c;text-transform:uppercase;letter-spacing:2px}
     .header__menu ul li.active a{color:var(--accent-color)}
-    .header__cart{display:flex;gap:10px;padding:25px 0;justify-content:flex-end;align-items:center}
-    .header__cart__link{position:relative;color:#1c1c1c;font-size:18px;line-height:1;display:inline-flex;align-items:center;width:32px;height:32px;justify-content:center}
-    .header__cart__badge{position:absolute;top:-6px;right:-8px;background:var(--accent-color);color:#fff;font-size:10px;min-width:18px;height:18px;line-height:18px;text-align:center;border-radius:50%;padding:0 4px}
+    .header__cart{padding:18px 0 20px;justify-content:flex-end;flex-wrap:wrap}
+    .header__cart__badge{position:absolute;top:-4px;right:-4px;background:#2D6A4F;color:#fff;font-size:11px;min-width:20px;height:20px;line-height:20px;text-align:center;border-radius:10px;padding:0 6px;border:2px solid #fff;pointer-events:none;z-index:2}
     .humberger__open{display:none;cursor:pointer;font-size:22px;color:var(--accent-color)}
     @media (max-width:991.98px){
       .humberger__open{display:inline-flex}
@@ -154,6 +155,7 @@
     <link rel="preload" href="css/nice-select.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/owl.carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="css/slicknav.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/ui-buttons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
@@ -163,6 +165,7 @@
         <link rel="stylesheet" href="css/nice-select.css">
         <link rel="stylesheet" href="css/owl.carousel.min.css">
         <link rel="stylesheet" href="css/slicknav.min.css">
+        <link rel="stylesheet" href="css/ui-buttons.css">
     </noscript>
 
 </head>
@@ -183,8 +186,14 @@
         </nav>
         <div id="mobile-menu-wrap"></div>
         <div class="header__top__right__social">
-            <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
-            <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
+            <a href="#" class="facebook" aria-label="Facebook">
+                <span class="tooltip" aria-hidden="true">Facebook</span>
+                <svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg>
+            </a>
+            <a href="#" class="instagram" aria-label="Instagram">
+                <span class="tooltip" aria-hidden="true">Instagram</span>
+                <svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg>
+            </a>
         </div>
         <div class="humberger__menu__contact">
             <ul>
@@ -211,8 +220,14 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
                             <div class="header__top__right__social">
-                                <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
-                                <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
+                                <a href="#" class="facebook" aria-label="Facebook">
+                                    <span class="tooltip" aria-hidden="true">Facebook</span>
+                                    <svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg>
+                                </a>
+                                <a href="#" class="instagram" aria-label="Instagram">
+                                    <span class="tooltip" aria-hidden="true">Instagram</span>
+                                    <svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg>
+                                </a>
                             </div>
                             <div class="header__top__right__auth">
                                 <a href="tel:+12049479558"><svg class="icon icon-phone" aria-hidden="true"><use href="/img/icons.svg#icon-phone"></use></svg> Call Us</a>
@@ -245,14 +260,17 @@
                 </div>
                 <div class="col-lg-3">
                     <div class="header__cart" role="toolbar" aria-label="Cart and account">
-                        <a href="#" id="cartBtn" class="header__cart__link header__cart__link--cart" aria-label="Shopping cart">
+                        <a href="#" id="cartBtn" class="cart-link" aria-label="Shopping cart">
+                            <span class="tooltip" aria-hidden="true">Cart</span>
                             <svg class="icon icon-shopping-bag" aria-hidden="true"><use href="/img/icons.svg#icon-shopping-bag"></use></svg>
                             <span id="cartCount" class="header__cart__badge">0</span>
                         </a>
-                        <a href="/account" id="headerAccountBtn" class="header__cart__link" aria-label="My account">
+                        <a href="/account" id="headerAccountBtn" class="account-link" aria-label="My account">
+                            <span class="tooltip" aria-hidden="true">Account</span>
                             <svg class="icon icon-user" aria-hidden="true"><use href="/img/icons.svg#icon-user"></use></svg>
                         </a>
-                        <a href="#" id="headerSignOutBtn" class="header__cart__link header__cart__link--signout" style="display:none" aria-label="Sign out">
+                        <a href="#" id="headerSignOutBtn" class="signout-link" style="display:none" aria-label="Sign out">
+                            <span class="tooltip" aria-hidden="true">Sign out</span>
                             <svg class="icon icon-sign-out" aria-hidden="true"><use href="/img/icons.svg#icon-sign-out"></use></svg>
                         </a>
                     </div>
@@ -502,8 +520,14 @@
                         <h6>About Us</h6>
                         <p>Millad's Supermarket offers quality halal meat, fresh groceries, and essential pantry items. Serving Winnipeg with the finest products.</p>
                         <div class="footer__widget__social">
-                            <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
-                            <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
+                            <a href="#" class="facebook" aria-label="Facebook">
+                                <span class="tooltip" aria-hidden="true">Facebook</span>
+                                <svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg>
+                            </a>
+                            <a href="#" class="instagram" aria-label="Instagram">
+                                <span class="tooltip" aria-hidden="true">Instagram</span>
+                                <svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg>
+                            </a>
                         </div>
                     </div>
                 </div>

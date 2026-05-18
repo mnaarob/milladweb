@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="css/theme.css" type="text/css">
     <link rel="stylesheet" href="css/components.css" type="text/css">
     <link rel="stylesheet" href="css/animations.css" type="text/css">
+    <link rel="stylesheet" href="css/ui-buttons.css" type="text/css">
     <!-- render=explicit: widgets are created only via turnstile.render() (see account-app.js) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
@@ -48,8 +49,14 @@
         </nav>
         <div id="mobile-menu-wrap"></div>
         <div class="header__top__right__social">
-            <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
-            <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
+            <a href="#" class="facebook" aria-label="Facebook">
+                <span class="tooltip" aria-hidden="true">Facebook</span>
+                <svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg>
+            </a>
+            <a href="#" class="instagram" aria-label="Instagram">
+                <span class="tooltip" aria-hidden="true">Instagram</span>
+                <svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg>
+            </a>
         </div>
         <div class="humberger__menu__contact">
             <ul>
@@ -74,8 +81,14 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
                             <div class="header__top__right__social">
-                                <a href="#"><svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg></a>
-                                <a href="#"><svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg></a>
+                                <a href="#" class="facebook" aria-label="Facebook">
+                                    <span class="tooltip" aria-hidden="true">Facebook</span>
+                                    <svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg>
+                                </a>
+                                <a href="#" class="instagram" aria-label="Instagram">
+                                    <span class="tooltip" aria-hidden="true">Instagram</span>
+                                    <svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg>
+                                </a>
                             </div>
                             <div class="header__top__right__auth">
                                 <a href="tel:+12049479558"><svg class="icon icon-phone" aria-hidden="true"><use href="/img/icons.svg#icon-phone"></use></svg> (204) 947-9558</a>
@@ -108,14 +121,17 @@
                 </div>
                 <div class="col-lg-3">
                     <div class="header__cart" role="toolbar" aria-label="Cart and account">
-                        <a href="#" id="cartBtn" class="header__cart__link header__cart__link--cart" aria-label="Shopping cart">
+                        <a href="#" id="cartBtn" class="cart-link" aria-label="Shopping cart">
+                            <span class="tooltip" aria-hidden="true">Cart</span>
                             <svg class="icon icon-shopping-bag" aria-hidden="true"><use href="/img/icons.svg#icon-shopping-bag"></use></svg>
                             <span id="cartCount" class="header__cart__badge">0</span>
                         </a>
-                        <a href="/account" id="headerAccountBtn" class="header__cart__link" aria-label="My account">
+                        <a href="/account" id="headerAccountBtn" class="account-link" aria-label="My account">
+                            <span class="tooltip" aria-hidden="true">Account</span>
                             <svg class="icon icon-user" aria-hidden="true"><use href="/img/icons.svg#icon-user"></use></svg>
                         </a>
-                        <a href="#" id="headerSignOutBtn" class="header__cart__link header__cart__link--signout" style="display:none" aria-label="Sign out">
+                        <a href="#" id="headerSignOutBtn" class="signout-link" style="display:none" aria-label="Sign out">
+                            <span class="tooltip" aria-hidden="true">Sign out</span>
                             <svg class="icon icon-sign-out" aria-hidden="true"><use href="/img/icons.svg#icon-sign-out"></use></svg>
                         </a>
                     </div>

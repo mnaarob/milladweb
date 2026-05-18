@@ -1467,15 +1467,9 @@
     margin-right: 16px;
 }
 
-/* Header cart: tight icon cluster + modern pill buttons (replaces split left/right layout) */
+/* Header cart: cluster width (visuals now handled by css/ui-buttons.css Uiverse circles) */
 .header__cart {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 6px;
     width: 100%;
-    padding: 20px 0 22px;
 }
 
 /* ── Mobile header: row1 logo + burger; row2 cart + account centered ── */
@@ -1512,6 +1506,8 @@
     }
 }
 
+/* Legacy header__cart__link pill styles — superseded by css/ui-buttons.css (Uiverse circles).
+   Kept commented for reference; .header__cart__badge styling now lives in ui-buttons.css.
 .header__cart__link {
     position: relative;
     display: inline-flex;
@@ -1565,6 +1561,7 @@
     border: 2px solid #fff;
     pointer-events: none;
 }
+*/
 
 .header__top__right__auth a:last-child {
     margin-right: 0;

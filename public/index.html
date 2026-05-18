@@ -6,6 +6,7 @@
     <title>Millad's Supermarket - Coming Soon</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/ui-buttons.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -167,29 +168,9 @@
             margin: 40px auto;
         }
         
-        .social {
-            margin-top: 30px;
-        }
-        
-        .social a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 45px;
-            height: 45px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            color: white;
-            text-decoration: none;
-            margin: 0 8px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .social a:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-3px);
-        }
+        /* .social — visuals handled by css/ui-buttons.css (Uiverse circles).
+           Keep only spacing tweak that does not conflict. */
+        .social { margin-top: 30px; }
         
         .footer-text {
             margin-top: 50px;
@@ -244,8 +225,8 @@
         <div class="divider"></div>
         
         <div class="social">
-            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="facebook" aria-label="Facebook"><span class="tooltip" aria-hidden="true">Facebook</span><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="instagram" aria-label="Instagram"><span class="tooltip" aria-hidden="true">Instagram</span><i class="fab fa-instagram"></i></a>
         </div>
         
         <p class="footer-text">© 2026 Millad's Supermarket. All rights reserved.</p>

@@ -1,0 +1,383 @@
+/* ============================================================================
+   UI Buttons — Uiverse-inspired white circles with animated tooltips
+   ----------------------------------------------------------------------------
+   Adapted from https://uiverse.io/david-mohseni
+   Single source of truth for:
+     - Social icons        (header__top__right__social, footer__widget__social, .social, .blog__details__social)
+     - Header cart cluster (.header__cart > a)
+   Brand classes drive hover color: .facebook .twitter .instagram .linkedin
+                                    .pinterest .youtube .gplus .email
+   Role classes drive hover color:  .cart-link .account-link .signout-link
+   ============================================================================ */
+
+/* Wrapper — flex row of circles */
+.header__top__right__social,
+.footer__widget .footer__widget__social,
+.header__cart,
+.header__cart ul,
+.humberger__menu__cart,
+.humberger__menu__cart ul,
+.blog__details__social,
+.social {
+    display: inline-flex;
+    list-style: none;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    padding: 0;
+    margin: 0;
+    font-family: "Poppins", "Cairo", sans-serif;
+}
+
+/* Override Bootstrap row weirdness inside header__cart (it's a flex toolbar, not a Bootstrap row) */
+.header__cart {
+    padding: 18px 0 20px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* Legacy <ul><li><a> cart markup — strip list styling so li becomes a positioning shell */
+.header__cart ul li,
+.humberger__menu__cart ul li {
+    list-style: none;
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+}
+
+/* The circle button itself */
+.header__top__right__social > a,
+.header__top__right__social > button,
+.footer__widget .footer__widget__social > a,
+.header__cart > a,
+.header__cart > button,
+.header__cart ul li > a,
+.humberger__menu__cart ul li > a,
+.blog__details__social > a,
+.social > a,
+.social > button {
+    position: relative;
+    background: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    color: #1c1c1c;
+    text-decoration: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    font-family: inherit;
+}
+
+/* Inner SVG / FA icon sizing */
+.header__top__right__social > a > .icon,
+.header__top__right__social > button > .icon,
+.footer__widget .footer__widget__social > a > .icon,
+.header__cart > a > .icon,
+.header__cart > button > .icon,
+.header__cart ul li > a > .icon,
+.humberger__menu__cart ul li > a > .icon,
+.blog__details__social > a > .icon,
+.social > a > .icon,
+.social > button > .icon {
+    width: 1.1em;
+    height: 1.1em;
+    fill: currentColor;
+}
+
+.header__top__right__social > a > i,
+.header__top__right__social > button > i,
+.footer__widget .footer__widget__social > a > i,
+.header__cart > a > i,
+.header__cart > button > i,
+.header__cart ul li > a > i,
+.humberger__menu__cart ul li > a > i,
+.blog__details__social > a > i,
+.social > a > i,
+.social > button > i {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Lift on hover */
+.header__top__right__social > a:hover,
+.header__top__right__social > button:hover,
+.footer__widget .footer__widget__social > a:hover,
+.header__cart > a:hover,
+.header__cart > button:hover,
+.header__cart ul li > a:hover,
+.humberger__menu__cart ul li > a:hover,
+.blog__details__social > a:hover,
+.social > a:hover,
+.social > button:hover {
+    transform: translateY(-2px);
+}
+
+/* Tooltip — visually hidden but kept in DOM for accessibility (aria-label is the announced label) */
+.header__top__right__social > a > .tooltip,
+.header__top__right__social > button > .tooltip,
+.footer__widget .footer__widget__social > a > .tooltip,
+.header__cart > a > .tooltip,
+.header__cart > button > .tooltip,
+.header__cart ul li > a > .tooltip,
+.humberger__menu__cart ul li > a > .tooltip,
+.blog__details__social > a > .tooltip,
+.social > a > .tooltip,
+.social > button > .tooltip {
+    display: none !important;
+}
+
+/* Tooltip arrow */
+.header__top__right__social > a > .tooltip::before,
+.header__top__right__social > button > .tooltip::before,
+.footer__widget .footer__widget__social > a > .tooltip::before,
+.header__cart > a > .tooltip::before,
+.header__cart > button > .tooltip::before,
+.header__cart ul li > a > .tooltip::before,
+.humberger__menu__cart ul li > a > .tooltip::before,
+.blog__details__social > a > .tooltip::before,
+.social > a > .tooltip::before,
+.social > button > .tooltip::before {
+    position: absolute;
+    content: "";
+    height: 8px;
+    width: 8px;
+    background: #fff;
+    bottom: -3px;
+    left: 50%;
+    transform: translate(-50%) rotate(45deg);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Reveal tooltip on hover/focus */
+.header__top__right__social > a:hover > .tooltip,
+.header__top__right__social > a:focus-visible > .tooltip,
+.header__top__right__social > button:hover > .tooltip,
+.header__top__right__social > button:focus-visible > .tooltip,
+.footer__widget .footer__widget__social > a:hover > .tooltip,
+.footer__widget .footer__widget__social > a:focus-visible > .tooltip,
+.header__cart > a:hover > .tooltip,
+.header__cart > a:focus-visible > .tooltip,
+.header__cart > button:hover > .tooltip,
+.header__cart > button:focus-visible > .tooltip,
+.header__cart ul li > a:hover > .tooltip,
+.header__cart ul li > a:focus-visible > .tooltip,
+.humberger__menu__cart ul li > a:hover > .tooltip,
+.humberger__menu__cart ul li > a:focus-visible > .tooltip,
+.blog__details__social > a:hover > .tooltip,
+.blog__details__social > a:focus-visible > .tooltip,
+.social > a:hover > .tooltip,
+.social > a:focus-visible > .tooltip,
+.social > button:hover > .tooltip,
+.social > button:focus-visible > .tooltip {
+    top: -45px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Subtle text shadow during hover transition */
+.header__top__right__social > a:hover > .tooltip,
+.footer__widget .footer__widget__social > a:hover > .tooltip,
+.header__cart > a:hover > .tooltip,
+.header__cart ul li > a:hover > .tooltip,
+.humberger__menu__cart ul li > a:hover > .tooltip,
+.blog__details__social > a:hover > .tooltip,
+.social > a:hover > .tooltip {
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================================
+   Brand-color hover states
+   ============================================================================ */
+
+/* Facebook */
+.facebook:hover,
+.facebook:hover > .tooltip,
+.facebook:hover > .tooltip::before { background: #1877f2; color: #fff; }
+
+/* Twitter / X */
+.twitter:hover,
+.twitter:hover > .tooltip,
+.twitter:hover > .tooltip::before { background: #1da1f2; color: #fff; }
+
+/* Instagram */
+.instagram:hover,
+.instagram:hover > .tooltip,
+.instagram:hover > .tooltip::before { background: #e4405f; color: #fff; }
+
+/* LinkedIn */
+.linkedin:hover,
+.linkedin:hover > .tooltip,
+.linkedin:hover > .tooltip::before { background: #0a66c2; color: #fff; }
+
+/* Pinterest */
+.pinterest:hover,
+.pinterest:hover > .tooltip,
+.pinterest:hover > .tooltip::before { background: #e60023; color: #fff; }
+
+/* YouTube */
+.youtube:hover,
+.youtube:hover > .tooltip,
+.youtube:hover > .tooltip::before { background: #ff0000; color: #fff; }
+
+/* Google+ (legacy) */
+.gplus:hover,
+.gplus:hover > .tooltip,
+.gplus:hover > .tooltip::before { background: #db4437; color: #fff; }
+
+/* Email share */
+.email:hover,
+.email:hover > .tooltip,
+.email:hover > .tooltip::before { background: #4b5563; color: #fff; }
+
+/* ============================================================================
+   Role-color hover states (cart / account / sign-out)
+   ============================================================================ */
+
+.cart-link:hover,
+.cart-link:hover > .tooltip,
+.cart-link:hover > .tooltip::before { background: #2D6A4F; color: #fff; }
+
+.account-link:hover,
+.account-link:hover > .tooltip,
+.account-link:hover > .tooltip::before { background: #2D6A4F; color: #fff; }
+
+.signout-link:hover,
+.signout-link:hover > .tooltip,
+.signout-link:hover > .tooltip::before { background: #dc2626; color: #fff; }
+
+/* ============================================================================
+   Cart badge — sits on top-right edge of the circle
+   Supports both: explicit <span class="header__cart__badge"> (deployed pages)
+   and the legacy unlabeled <span>N</span> count used by newDesign templates.
+   ============================================================================ */
+.header__cart > a .header__cart__badge,
+.cart-link .header__cart__badge,
+.header__cart ul li > a > span,
+.humberger__menu__cart ul li > a > span {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+    color: #fff;
+    background: #2D6A4F;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+    z-index: 2;
+    display: inline-block;
+}
+
+/* The tooltip span inside the anchor MUST NOT inherit the badge style */
+.header__cart ul li > a > span.tooltip,
+.humberger__menu__cart ul li > a > span.tooltip {
+    top: 0;
+    right: auto;
+    min-width: 0;
+    height: auto;
+    padding: 5px 10px;
+    line-height: 1.2;
+    color: #1c1c1c;
+    background: #fff;
+    border: none;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+/* Keep badge legible when the cart button itself recolors on hover */
+.cart-link:hover .header__cart__badge,
+.header__cart ul li > a.cart-link:hover > span:not(.tooltip),
+.humberger__menu__cart ul li > a.cart-link:hover > span:not(.tooltip) {
+    background: #fff;
+    color: #2D6A4F;
+}
+
+/* ============================================================================
+   Focus accessibility
+   ============================================================================ */
+.header__top__right__social > a:focus-visible,
+.footer__widget .footer__widget__social > a:focus-visible,
+.header__cart > a:focus-visible,
+.header__cart ul li > a:focus-visible,
+.humberger__menu__cart ul li > a:focus-visible,
+.blog__details__social > a:focus-visible,
+.social > a:focus-visible {
+    outline: 2px solid #2D6A4F;
+    outline-offset: 3px;
+}
+
+/* ============================================================================
+   Layout tweaks per location
+   ============================================================================ */
+
+/* Header top strip — pull cluster up a bit and remove old divider */
+.header__top__right__social {
+    margin-right: 0;
+    vertical-align: middle;
+}
+.header__top__right__social::after { display: none; content: none; }
+
+/* Footer social — bigger spacing already handled by .gap */
+.footer__widget .footer__widget__social { margin-top: 6px; }
+
+/* Mobile: center the header cart cluster and shrink gap */
+@media (max-width: 991.98px) {
+    .header__cart {
+        justify-content: center;
+        padding: 6px 0 12px;
+        gap: 12px;
+    }
+    .header__top__right__social,
+    .footer__widget .footer__widget__social {
+        gap: 12px;
+    }
+}
+
+/* Inside the hamburger drawer, smaller circles to fit narrow column */
+.humberger__menu__wrapper .header__top__right__social > a {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+}
+
+/* Legacy newDesign cart price text — line up next to circles instead of breaking layout */
+.header__cart .header__cart__price,
+.humberger__menu__cart .header__cart__price {
+    margin-left: 14px;
+    font-size: 14px;
+    color: #6f6f6f;
+    align-self: center;
+}
+.header__cart .header__cart__price span,
+.humberger__menu__cart .header__cart__price span {
+    color: #252525;
+    font-weight: 700;
+}
+
+/* newDesign hamburger drawer cart cluster: own column under price */
+.humberger__menu__cart {
+    margin-bottom: 25px;
+}
+.humberger__menu__cart ul { display: inline-flex; }
+
+/* newDesign header__top__right__auth — keep this as a text link, not a circle */
+.header__top__right__auth a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}

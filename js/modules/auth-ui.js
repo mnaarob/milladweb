@@ -41,7 +41,7 @@ export function initAuthUI() {
         const signOutLink = e.target.closest('#headerSignOutBtn, #mobileSignOutBtn');
         if (signOutLink) {
             e.preventDefault();
-            signOut().catch(console.error);
+            signOut().catch(() => {});
         }
     });
 }

@@ -37,6 +37,13 @@ const HOMEPAGE_CSS = [
 const JS_TO_MINIFY = [
     'js/vendor/main.js',
     'js/app.js',
+    'js/shop-app.js',
+    'js/account-app.js',
+    'js/admin-app.js',
+    'js/config/supabase.js',
+    'js/services/auth.js',
+    'js/services/database.js',
+    'js/services/stripe.js',
     'js/modules/animations.js',
     'js/modules/auth-ui.js',
     'js/modules/auth-validation.js',
@@ -126,6 +133,36 @@ async function rewriteIndexHtml() {
     console.log('build-assets: index.html rewritten to use home.min.css');
 }
 
+function stripHtmlComments() {
+    const htmlFiles = [];
+    const walk = (dir) => {
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                walk(full);
+            } else if (entry.name.endsWith('.html')) {
+                htmlFiles.push(full);
+            }
+        }
+    };
+    walk(dist);
+
+    // Remove standard HTML comments while preserving IE conditional comments
+    // (<!--[if ...]> ... <![endif]-->) which carry meaning to old browsers.
+    const commentRegex = /<!--(?!\[if)[\s\S]*?-->/g;
+
+    let cleaned = 0;
+    for (const file of htmlFiles) {
+        const before = fs.readFileSync(file, 'utf8');
+        const after = before.replace(commentRegex, '');
+        if (after !== before) {
+            fs.writeFileSync(file, after);
+            cleaned++;
+        }
+    }
+    console.log('build-assets: stripped HTML comments from', cleaned, 'file(s)');
+}
+
 async function minifyJs() {
     const targets = JS_TO_MINIFY
         .map((rel) => path.join(dist, rel))
@@ -139,6 +176,9 @@ async function minifyJs() {
             minify: true,
             target: 'es2019',
             legalComments: 'none',
+            // Strip all console.* calls and debugger statements so nothing
+            // leaks into the browser console in production.
+            drop: ['console', 'debugger'],
             loader: file.endsWith('.mjs') ? 'js' : 'js',
         });
         fs.writeFileSync(file, result.code);
@@ -155,6 +195,7 @@ async function minifyJs() {
     await buildHomeCss();
     await rewriteIndexHtml();
     await minifyJs();
+    stripHtmlComments();
     console.log('build-assets: done.');
 })().catch((err) => {
     console.error('build-assets failed:', err);

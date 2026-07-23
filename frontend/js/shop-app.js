@@ -5,12 +5,12 @@ import {
     renderCategories,
     PRODUCTS_PER_PAGE,
     clearProductsCache
-} from './modules/products.js?v=3';
+} from './modules/products.js?v=4';
 import { initCart } from './modules/cart-ui.js?v=3';
 import { initCheckout } from './modules/checkout.js?v=3';
 import { initSearch } from './modules/search.js?v=3';
 import { initAnimations, initBlurUpImages } from './modules/animations.js?v=4';
-import { initProductModal } from './modules/product-modal.js?v=4';
+import { initProductModal } from './modules/product-modal.js?v=5';
 import { initAuthUI } from './modules/auth-ui.js?v=3';
 
 let currentCategory = 'all';

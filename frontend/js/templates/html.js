@@ -1,5 +1,24 @@
+/**
+ * Determine the filter bucket (beef / chicken / lamb / seafood) for a product so
+ * the homepage "Featured" filter buttons work even when the DB has no subcategory.
+ * Falls back to subcategory or category for non-meat items.
+ */
+function featuredFilterClass(product) {
+    const sub = (product.subcategory || '').toLowerCase();
+    if (['beef', 'chicken', 'lamb', 'seafood'].includes(sub)) return sub;
+    if (sub === 'goat') return 'lamb';
+
+    const name = (product.name || '').toLowerCase();
+    if (/fish|tilapia|mackerel|salmon|shrimp|prawns?|catfish|croaker|seafood|crab|lobster|squid|octopus|oyster|clam|tuna|sardine|anchovy/.test(name)) return 'seafood';
+    if (/chicken|turkey|poultry/.test(name)) return 'chicken';
+    if (/lamb|goat|mutton/.test(name)) return 'lamb';
+    if (/beef|oxtail|tongue|kidney|liver|steak|veal|mince/.test(name)) return 'beef';
+
+    return product.subcategory || product.category;
+}
+
 export function featuredCardTemplate(product) {
-    const filterClass = product.subcategory || product.category;
+    const filterClass = featuredFilterClass(product);
     const imagePath = resolveImagePath(product);
     const hasImage = imagePath && !imagePath.startsWith('data:');
 

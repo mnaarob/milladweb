@@ -1,5 +1,5 @@
 import { getFeaturedProducts, getProducts, getCategories } from '../services/database.js?v=3';
-import { featuredCardTemplate, shopProductCardTemplate, categoryLinkTemplate } from '../templates/html.js?v=3';
+import { featuredCardTemplate, shopProductCardTemplate, categoryLinkTemplate } from '../templates/html.js?v=4';
 
 let allProducts = [];
 

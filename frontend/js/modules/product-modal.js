@@ -1,4 +1,4 @@
-import { getAllProducts } from './products.js?v=3';
+import { getAllProducts } from './products.js?v=4';
 import { addToCartAndNotify } from './cart-ui.js';
 import { lockBodyScroll, unlockBodyScroll } from './scroll-lock.js';
 

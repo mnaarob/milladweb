@@ -10,7 +10,7 @@ const root = path.join(projectRoot, 'frontend');
 const dist = path.join(projectRoot, 'dist');
 
 const DIRS = ['css', 'js', 'img', 'fonts', 'images', 'blog'];
-const ROOT_FILES = ['products.json', 'styles.css', 'admin-styles.css'];
+const ROOT_FILES = ['products.json', 'styles.css', 'admin-styles.css', 'favicon.svg'];
 
 function rmrf(p) {
     if (fs.existsSync(p)) fs.rmSync(p, { recursive: true, force: true });

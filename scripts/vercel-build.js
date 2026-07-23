@@ -5,8 +5,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const root = path.join(__dirname, '..');
-const dist = path.join(root, 'dist');
+const projectRoot = path.join(__dirname, '..');
+const root = path.join(projectRoot, 'frontend');
+const dist = path.join(projectRoot, 'dist');
 
 const DIRS = ['css', 'js', 'img', 'fonts', 'images', 'blog'];
 const ROOT_FILES = ['products.json', 'styles.css', 'admin-styles.css'];
@@ -38,7 +39,7 @@ for (const name of fs.readdirSync(root)) {
     }
 }
 
-const migrateSrc = path.join(root, 'scripts', 'migrate-products.html');
+const migrateSrc = path.join(projectRoot, 'scripts', 'migrate-products.html');
 if (fs.existsSync(migrateSrc)) {
     const sd = path.join(dist, 'scripts');
     fs.mkdirSync(sd, { recursive: true });

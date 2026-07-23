@@ -36,7 +36,7 @@ if (!SUPABASE_SERVICE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-const PRODUCTS_JSON = path.join(__dirname, '..', 'products.json');
+const PRODUCTS_JSON = path.join(__dirname, '..', 'frontend', 'products.json');
 
 function toPlainProduct(row) {
     const out = {

@@ -15,7 +15,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '..', 'frontend');
 const SPRITE_FILE = path.join(ROOT, 'img', 'icons.svg');
 
 function spriteIconIds() {

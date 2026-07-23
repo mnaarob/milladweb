@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node scripts/vercel-build.js",
     "deploy:place-order": "supabase functions deploy place-order --no-verify-jwt",
-    "serve": "npx serve . -l 3000",
+    "serve": "npx serve frontend -l 3000",
     "export": "node scripts/export-products.js",
     "seed": "node scripts/seed-products.js"
   },

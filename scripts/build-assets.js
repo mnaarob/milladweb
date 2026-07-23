@@ -29,9 +29,9 @@ const HOMEPAGE_CSS = [
     'css/theme.css',
     'css/components.css',
     'css/animations.css',
-    'css/nice-select.css',
-    'css/owl.carousel.min.css',
-    'css/slicknav.min.css',
+    'css/vendor/nice-select.css',
+    'css/vendor/owl.carousel.min.css',
+    'css/vendor/slicknav.min.css',
 ];
 
 const JS_TO_MINIFY = [
@@ -117,8 +117,8 @@ async function rewriteIndexHtml() {
     if (!fs.existsSync(indexPath)) return;
     let html = fs.readFileSync(indexPath, 'utf8');
 
-    const preloadBlockRegex = /<link rel="preload" href="css\/style\.css"[\s\S]*?<link rel="preload" href="css\/slicknav\.min\.css"[^>]*>/;
-    const noscriptBlockRegex = /<link rel="stylesheet" href="css\/style\.css">[\s\S]*?<link rel="stylesheet" href="css\/slicknav\.min\.css">/;
+    const preloadBlockRegex = /<link rel="preload" href="css\/style\.css"[\s\S]*?<link rel="preload" href="css\/vendor\/slicknav\.min\.css"[^>]*>/;
+    const noscriptBlockRegex = /<link rel="stylesheet" href="css\/style\.css">[\s\S]*?<link rel="stylesheet" href="css\/vendor\/slicknav\.min\.css">/;
 
     html = html.replace(
         preloadBlockRegex,

@@ -121,7 +121,7 @@
       "image": "🥚",
       "fallbackEmoji": "🥚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "13",
@@ -157,7 +157,7 @@
       "image": "images/fruits/Banana.webp",
       "fallbackEmoji": "🍌",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "6",
@@ -169,7 +169,7 @@
       "image": "🥕",
       "fallbackEmoji": "🥕",
       "inStock": false,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "7",
@@ -229,7 +229,7 @@
       "image": "images/vegetables/OrganicGinger.webp",
       "fallbackEmoji": "🫚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "35",
@@ -811,7 +811,7 @@
       "image": "pantry/shan_aaloo_bhaji_50gm.jpg",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "65",
@@ -823,7 +823,7 @@
       "image": "pantry/shan_achar_gosht_50gm.jpg",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "66",
@@ -835,7 +835,7 @@
       "image": "pantry/shan_biryani_50gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "67",
@@ -847,7 +847,7 @@
       "image": "pantry/shan_black_pepper_powder_100gm.jpg",
       "fallbackEmoji": "⚫",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "68",
@@ -859,7 +859,7 @@
       "image": "pantry/shan_bukhari_rice_45gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "69",
@@ -871,7 +871,7 @@
       "image": "pantry/shan_butter_chicken_50gm.jpg",
       "fallbackEmoji": "🍗",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "72",
@@ -883,7 +883,7 @@
       "image": "pantry/shan_chana_masala_100gm.jpg",
       "fallbackEmoji": "🥘",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "73",
@@ -895,7 +895,7 @@
       "image": "pantry/shan_chapli_kabab_100gm.jpg",
       "fallbackEmoji": "🍢",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "74",
@@ -907,7 +907,7 @@
       "image": "pantry/shan_chicken_65_60gm.jpg",
       "fallbackEmoji": "🍗",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "75",
@@ -919,7 +919,7 @@
       "image": "pantry/shan_chicken_masala_50gm.jpg",
       "fallbackEmoji": "🍗",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "76",
@@ -931,7 +931,7 @@
       "image": "pantry/shan_chinese_chowmein_35gm.jpg",
       "fallbackEmoji": "🍜",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "77",
@@ -943,7 +943,7 @@
       "image": "pantry/shan_chinese_egg_fried_rice_35gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "78",
@@ -967,7 +967,7 @@
       "image": "pantry/shan_daal_makhni_100gm.jpg",
       "fallbackEmoji": "🥘",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "81",
@@ -979,7 +979,7 @@
       "image": "pantry/shan_fried_chops_50gm.jpg",
       "fallbackEmoji": "🥩",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "82",
@@ -991,7 +991,7 @@
       "image": "pantry/shan_fried_fish_50gm.jpg",
       "fallbackEmoji": "🐟",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "83",
@@ -1003,7 +1003,7 @@
       "image": "pantry/shan_ginger_powder_100gm.jpg",
       "fallbackEmoji": "🫚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "84",
@@ -1015,7 +1015,7 @@
       "image": "pantry/shan_gulab_jaman_mix_100gm.jpg",
       "fallbackEmoji": "🍰",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "86",
@@ -1027,7 +1027,7 @@
       "image": "pantry/shan_hunter_beef_150gm.jpg",
       "fallbackEmoji": "🥩",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "87",
@@ -1039,7 +1039,7 @@
       "image": "pantry/shan_kabsa_rice_60gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "88",
@@ -1051,7 +1051,7 @@
       "image": "pantry/shan_karachi_beef_biryani_60gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "89",
@@ -1063,7 +1063,7 @@
       "image": "pantry/shan_karahi_50gm.jpg",
       "fallbackEmoji": "🥘",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "90",
@@ -1075,7 +1075,7 @@
       "image": "pantry/shan_kat_a_kat_50gm.jpg",
       "fallbackEmoji": "🍳",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "91",
@@ -1087,7 +1087,7 @@
       "image": "pantry/shan_keema_50gm.jpg",
       "fallbackEmoji": "🥩",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "92",
@@ -1099,7 +1099,7 @@
       "image": "pantry/shan_kheer_kurma_mix_150gm.jpg",
       "fallbackEmoji": "🍮",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "93",
@@ -1111,7 +1111,7 @@
       "image": "pantry/shan_kheer_mix_150gm.jpg",
       "fallbackEmoji": "🍮",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "94",
@@ -1123,7 +1123,7 @@
       "image": "pantry/shan_korma_50gm.jpg",
       "fallbackEmoji": "🥘",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "95",
@@ -1135,7 +1135,7 @@
       "image": "pantry/shan_lahori_charga_50gm.jpg",
       "fallbackEmoji": "🍗",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "96",
@@ -1147,7 +1147,7 @@
       "image": "pantry/shan_liver_masala_50gm.jpg",
       "fallbackEmoji": "🥩",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "97",
@@ -1159,7 +1159,7 @@
       "image": "pantry/shan_malay_chicken_biryani_60gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "98",
@@ -1183,7 +1183,7 @@
       "image": "pantry/shan_memoni_mutton_biryani_60gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "100",
@@ -1195,7 +1195,7 @@
       "image": "pantry/shan_murgh_cholay_50gm.jpg",
       "fallbackEmoji": "🍗",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "101",
@@ -1207,7 +1207,7 @@
       "image": "pantry/shan_nihari_60gm.jpg",
       "fallbackEmoji": "🥘",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "104",
@@ -1219,7 +1219,7 @@
       "image": "pantry/shan_paya_50gm.jpg",
       "fallbackEmoji": "🥩",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "105",
@@ -1231,7 +1231,7 @@
       "image": "pantry/shan_pilau_biryani_50gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "107",
@@ -1255,7 +1255,7 @@
       "image": "pantry/shan_shami_kabab_50gm.jpg",
       "fallbackEmoji": "🍢",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "110",
@@ -1267,7 +1267,7 @@
       "image": "pantry/shan_shawerma_40gm.jpg",
       "fallbackEmoji": "🌯",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "111",
@@ -1279,7 +1279,7 @@
       "image": "pantry/shan_sindhi_biryani_60gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "112",
@@ -1291,7 +1291,7 @@
       "image": "pantry/shan_special_bombay_biryani_60gm.jpg",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "113",
@@ -1303,7 +1303,7 @@
       "image": "pantry/shan_tandoori_masala_50gm.jpg",
       "fallbackEmoji": "🔥",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "114",
@@ -1315,7 +1315,7 @@
       "image": "pantry/shan_tikka_masala_50gm.jpg",
       "fallbackEmoji": "🍗",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "115",
@@ -1327,7 +1327,7 @@
       "image": "pantry/shan_tikka_seekh_kabab_50gm.jpg",
       "fallbackEmoji": "🍢",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "116",
@@ -1339,7 +1339,7 @@
       "image": "pantry/shan_tumeric_powder_100gm.jpg",
       "fallbackEmoji": "🌼",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "117",
@@ -1351,7 +1351,7 @@
       "image": "pantry/shan_zafrani_garam_masala_powder_50gm.jpg",
       "fallbackEmoji": "🌸",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "118",
@@ -1363,7 +1363,7 @@
       "image": "🥬",
       "fallbackEmoji": "🥬",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "119",
@@ -1375,7 +1375,7 @@
       "image": "🥬",
       "fallbackEmoji": "🥬",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "120",
@@ -1471,7 +1471,7 @@
       "image": "🛒",
       "fallbackEmoji": "🛒",
       "inStock": true,
-      "taxExempt": true
+      "taxExempt": false
     },
     {
       "id": "128",
@@ -1651,7 +1651,7 @@
       "image": "🫒",
       "fallbackEmoji": "🫒",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "143",
@@ -1855,7 +1855,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "160",
@@ -1927,7 +1927,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "166",
@@ -1939,7 +1939,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "167",
@@ -1951,7 +1951,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "168",
@@ -1975,7 +1975,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "170",
@@ -2023,7 +2023,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "174",
@@ -2035,7 +2035,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "175",
@@ -2059,7 +2059,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "177",
@@ -2071,7 +2071,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "178",
@@ -2155,7 +2155,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "185",
@@ -2287,7 +2287,7 @@
       "image": "🛒",
       "fallbackEmoji": "🛒",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "196",
@@ -2335,7 +2335,7 @@
       "image": "🌶️",
       "fallbackEmoji": "🌶️",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "200",
@@ -2587,7 +2587,7 @@
       "image": "🍚",
       "fallbackEmoji": "🍚",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "221",
@@ -3199,7 +3199,7 @@
       "image": "☕",
       "fallbackEmoji": "☕",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "272",
@@ -3739,7 +3739,7 @@
       "image": "☕",
       "fallbackEmoji": "☕",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "317",
@@ -3859,7 +3859,7 @@
       "image": "☕",
       "fallbackEmoji": "☕",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "327",
@@ -3907,7 +3907,7 @@
       "image": "☕",
       "fallbackEmoji": "☕",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "331",
@@ -3919,7 +3919,7 @@
       "image": "☕",
       "fallbackEmoji": "☕",
       "inStock": true,
-      "taxExempt": false
+      "taxExempt": true
     },
     {
       "id": "332",

@@ -6,11 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="view-transition" content="same-origin">
     <title>Store dashboard — Millad's Supermarket</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+    @font-face{
+      font-family:'Cairo';
+      font-style:normal;
+      font-weight:400 1000;
+      font-display:swap;
+      src:url('fonts/cairo/cairo-var.woff2') format('woff2-variations'),
+          url('fonts/cairo/cairo-var.woff2') format('woff2');
+    }
+    .admin-icon{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex-shrink:0}
+    .stat-icon .admin-icon{width:22px;height:22px}
+    .admin-header h1 .admin-icon{width:14px;height:14px;color:var(--admin-accent)}
+    </style>
     <link rel="stylesheet" href="css/admin-panel.css">
     <link rel="stylesheet" href="css/ui-buttons.css">
     <!-- Same Turnstile site key as account.html — render=explicit so JS controls placement -->
@@ -49,19 +58,19 @@
         <header class="admin-header">
             <div class="admin-header-brand">
                 <a href="/">Millad's Supermarket</a>
-                <h1><i class="fas fa-leaf" aria-hidden="true"></i> Store dashboard</h1>
+                <h1><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> Store dashboard</h1>
             </div>
             <div class="admin-actions">
                 <button type="button" onclick="refreshOrders()" class="btn-primary">
-                    <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
+                    <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg> Refresh
                 </button>
                 <a href="/" class="btn-secondary">
-                    <i class="fas fa-store" aria-hidden="true"></i> View store
+                    <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2 2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/></svg> View store
                 </a>
                 <span class="header__cart" style="padding:0;width:auto;">
                     <button type="button" id="logoutBtn" class="signout-link" aria-label="Log out">
                         <span class="tooltip" aria-hidden="true">Log out</span>
-                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                        <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
                     </button>
                 </span>
             </div>
@@ -71,28 +80,28 @@
             <div class="admin-container">
                 <section class="admin-stats" aria-label="Store summary">
                     <div class="stat-card">
-                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="stat-icon" aria-hidden="true"><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
                         <div class="stat-info">
                             <h3 id="totalOrders">0</h3>
                             <p>Total orders</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-hourglass-half"></i></div>
+                        <div class="stat-icon" aria-hidden="true"><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
                         <div class="stat-info">
                             <h3 id="pendingOrders">0</h3>
                             <p>Awaiting action</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-receipt"></i></div>
+                        <div class="stat-icon" aria-hidden="true"><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg></div>
                         <div class="stat-info">
                             <h3 id="totalRevenue">$0.00</h3>
                             <p>Order total (all time)</p>
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon" aria-hidden="true"><i class="fas fa-sun"></i></div>
+                        <div class="stat-icon" aria-hidden="true"><svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
                         <div class="stat-info">
                             <h3 id="todayOrders">0</h3>
                             <p>Orders today</p>
@@ -140,10 +149,10 @@
                         </div>
                         <div class="products-toolbar__actions">
                             <button type="button" class="btn-secondary" onclick="loadProducts()">
-                                <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
+                                <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg> Refresh
                             </button>
                             <button type="button" class="btn-primary" onclick="openProductModal()">
-                                <i class="fas fa-plus" aria-hidden="true"></i> Add product
+                                <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Add product
                             </button>
                         </div>
                     </div>
@@ -241,6 +250,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script type="module" src="js/admin-app.js?v=6"></script>
+    <script type="module" src="js/admin-app.js?v=7"></script>
 </body>
 </html>

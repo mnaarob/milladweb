@@ -44,6 +44,8 @@ build/Release
 
 # Vercel build output (generated locally / on CI)
 dist/
+client/dist/
+server/dist/
 .vercel
 
 # dotenv environment variables file

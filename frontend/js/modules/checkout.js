@@ -1,5 +1,5 @@
 import * as cart from './cart.js';
-import { saveOrder } from '../services/database.js?v=3';
+import { saveOrder } from '../services/database.js?v=4';
 import { getCurrentUser } from '../services/auth.js';
 import { checkoutItemTemplate, checkoutPricingTemplate } from '../templates/html.js';
 import { closeCartModal } from './animations.js';
@@ -12,6 +12,8 @@ const PAYMENT_HTML = {
 };
 
 const DELIVERY_CITY_LINE = 'Winnipeg, MB';
+
+const DELIVERY_SLOT_LABELS = { '2pm': '2:00 PM', '8pm': '8:00 PM' };
 
 /** Single-line address for orders and email (city is always Winnipeg). */
 function formatDeliveryAddress(street, unit, postal) {
@@ -35,7 +37,7 @@ function resetCheckoutUI() {
 }
 
 /** In-modal confirmation (reliable after async; browsers often block post-await alert()). */
-function showCheckoutSuccess(fulfillment, orderId) {
+function showCheckoutSuccess(fulfillment, orderId, deliverySlotLabel) {
     const form = document.getElementById('checkout-form');
     const panel = document.getElementById('checkoutSuccess');
     const msgEl = document.getElementById('checkoutSuccessMessage');
@@ -49,10 +51,14 @@ function showCheckoutSuccess(fulfillment, orderId) {
         });
     }
     if (msgEl) {
-        msgEl.textContent =
-            fulfillment === 'delivery'
-                ? 'We received your order. We will call you to confirm delivery and your order.'
-                : 'We received your order. We will call you when it is ready for pickup.';
+        if (fulfillment === 'delivery') {
+            const window = deliverySlotLabel ? ` Delivery window: ${deliverySlotLabel} (arrival can be about 20–30 minutes earlier or later).` : '';
+            msgEl.textContent =
+                `We received your order. It is confirmed only when we call you.${window} We will quote any delivery fee on that call, and the final amount can change with the actual weight of fresh items.`;
+        } else {
+            msgEl.textContent =
+                'We received your order. It is confirmed only when we call you. The final amount can change with the actual weight of fresh items. We will call you when it is ready for pickup.';
+        }
     }
     if (refEl) {
         if (orderId && typeof orderId === 'string' && orderId.length > 0) {
@@ -152,11 +158,16 @@ async function handleSubmit(e) {
         alert('Please fill in your name and phone number.');
         return;
     }
+    if (!document.getElementById('checkoutAge')?.checked) {
+        alert('You must be at least 18 years old to place an order.');
+        return;
+    }
 
     const fulfillment =
         document.querySelector('input[name="fulfillment"]:checked')?.value === 'delivery' ? 'delivery' : 'pickup';
 
     let deliveryAddressRaw = '';
+    let deliverySlot = '';
     if (fulfillment === 'delivery') {
         const street = document.getElementById('deliveryStreet')?.value?.trim() || '';
         const unit = document.getElementById('deliveryUnit')?.value?.trim() || '';
@@ -172,6 +183,11 @@ async function handleSubmit(e) {
         }
         if (!/^[A-Za-z]\d[A-Za-z]\d[A-Za-z]\d$/.test(postalCompact)) {
             alert('Please enter a valid Canadian postal code (e.g. R3B 1A1).');
+            return;
+        }
+        deliverySlot = document.querySelector('input[name="deliverySlot"]:checked')?.value || '';
+        if (!DELIVERY_SLOT_LABELS[deliverySlot]) {
+            alert('Please choose a delivery time (2:00 PM or 8:00 PM).');
             return;
         }
         deliveryAddressRaw = formatDeliveryAddress(street, unit, postal);
@@ -206,6 +222,9 @@ async function handleSubmit(e) {
                 ...(fulfillment === 'delivery' && deliveryAddressRaw
                     ? { delivery_address: deliveryAddressRaw }
                     : {}),
+                ...(fulfillment === 'delivery' && deliverySlot
+                    ? { delivery_slot: deliverySlot }
+                    : {}),
             },
             items: items.map(i => ({
                 id: i.id,
@@ -230,7 +249,7 @@ async function handleSubmit(e) {
         cart.clear();
 
         const orderId = result?.order?.id;
-        showCheckoutSuccess(fulfillment, orderId);
+        showCheckoutSuccess(fulfillment, orderId, DELIVERY_SLOT_LABELS[deliverySlot] || '');
     } catch (err) {
         console.error('Order error:', err);
         let message = 'Error placing order. Please try again.';

@@ -4,7 +4,7 @@ let productsCache = null;
 let categoriesCache = null;
 let _organizationId = null;
 
-const DB_TIMEOUT_MS = 5000;
+const DB_TIMEOUT_MS = 12000;
 const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
 async function getOrganizationId() {
@@ -245,6 +245,7 @@ const FEATURED_IDS = [15, 16, 19, 23, 22, 20, 27, 25, 26, 28, 17, 18, 21, 29, 59
 
 export async function getFeaturedProducts() {
     let products = [];
+    let loadedFromDatabase = false;
 
     function featuredFromJson(allProducts) {
         return allProducts
@@ -259,18 +260,21 @@ export async function getFeaturedProducts() {
                 .select('*')
                 .eq('store_id', STORE_ID)
                 .eq('is_published', true)
-                .eq('in_stock', true)
                 .eq('featured', true)
                 .order('sort_order')
-                .limit(16)
+                .limit(24)
         );
         if (error) throw error;
         products = (data || []).map(rowToProduct);
+        loadedFromDatabase = true;
     } catch (err) {
         console.warn('Supabase getFeaturedProducts failed, falling back to products.json:', err.message || err);
     }
 
-    if (products.length === 0) {
+    // An empty database result is a real answer. The JSON list is only for
+    // when the catalog cannot be reached, so a timeout cannot replace the
+    // products marked featured in the admin.
+    if (!loadedFromDatabase) {
         try {
             const all = await loadProductsFromJson();
             products = featuredFromJson(all);
@@ -281,7 +285,7 @@ export async function getFeaturedProducts() {
 
     return products
         .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
-        .slice(0, 16);
+        .slice(0, 24);
 }
 
 export async function getCategories() {

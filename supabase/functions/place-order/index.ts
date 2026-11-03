@@ -42,12 +42,16 @@ interface OrderItem {
     notes?: string;
 }
 
+type DeliverySlot = '2pm' | '8pm';
+const DELIVERY_SLOT_LABELS: Record<DeliverySlot, string> = { '2pm': '2:00 PM', '8pm': '8:00 PM' };
+
 interface CustomerPayload {
     name: string;
     phone: string;
     email?: string;
     fulfillment: 'pickup' | 'delivery';
     delivery_address?: string;
+    delivery_slot?: DeliverySlot;
 }
 
 interface OrderBody {
@@ -58,6 +62,7 @@ interface OrderBody {
         email?: string;
         fulfillment?: 'pickup' | 'delivery';
         delivery_address?: string;
+        delivery_slot?: string;
     };
     items: OrderItem[];
     pricing: { subtotal: number; gst: number; pst: number; total: number };
@@ -136,12 +141,19 @@ Deno.serve(async (req: Request) => {
         }
         const fulfillment = rawCustomer.fulfillment === 'delivery' ? 'delivery' : 'pickup';
         let delivery_address: string | undefined;
+        let delivery_slot: DeliverySlot | undefined;
         if (fulfillment === 'delivery') {
             delivery_address = String(rawCustomer.delivery_address ?? '').trim();
             if (delivery_address.length < 5) {
                 return json({
                     error: 'Please enter a complete delivery address (street, city, postal code).',
                 }, 400, origin);
+            }
+            const rawSlot = String(rawCustomer.delivery_slot ?? '').trim();
+            if (rawSlot === '2pm' || rawSlot === '8pm') {
+                delivery_slot = rawSlot;
+            } else if (rawSlot) {
+                return json({ error: 'Please choose a delivery time (2:00 PM or 8:00 PM).' }, 400, origin);
             }
         }
         const customer: CustomerPayload = {
@@ -150,6 +162,7 @@ Deno.serve(async (req: Request) => {
             ...(rawCustomer.email?.trim() && { email: rawCustomer.email.trim() }),
             fulfillment,
             ...(delivery_address && { delivery_address }),
+            ...(delivery_slot && { delivery_slot }),
         };
 
         // ── Validate items ───────────────────────────────────────────
@@ -276,16 +289,21 @@ async function sendOrderReceipt(
 ) {
     const shortId = order.id.slice(-6).toUpperCase();
     const isDelivery = customer.fulfillment === 'delivery';
+    const slotLabel = customer.delivery_slot ? DELIVERY_SLOT_LABELS[customer.delivery_slot] : '';
     const introLine = isDelivery
         ? `We will call you at <strong>${escHtml(customer.phone)}</strong> to confirm delivery and your order.${
             customer.delivery_address
                 ? ` Delivery address: <strong>${escHtml(customer.delivery_address)}</strong>.`
                 : ''
+        }${
+            slotLabel
+                ? ` Delivery window: <strong>${escHtml(slotLabel)}</strong> (arrival can be about 20–30 minutes earlier or later).`
+                : ''
         }`
         : `We will call you at <strong>${escHtml(customer.phone)}</strong> when it is ready for pickup.`;
     const footerTitle = isDelivery ? 'Delivery information' : 'Pickup information';
     const footerBody = isDelivery
-        ? 'We will confirm delivery time and the final total by phone (weights on fresh items may vary slightly).'
+        ? `${slotLabel ? `Your delivery window is ${escHtml(slotLabel)}. ` : ''}We will confirm the final total by phone (weights on fresh items may vary slightly).`
         : 'We will call you when your order is ready. Please bring this confirmation.';
 
     const itemRows = items.map(i => `
@@ -308,7 +326,7 @@ async function sendOrderReceipt(
       <!-- Header -->
       <tr><td style="background:#2D6A4F;padding:28px 40px;text-align:center">
         <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700">${escHtml(storeName)}</h1>
-        <p style="color:rgba(255,255,255,0.8);margin:6px 0 0;font-size:14px">Order Confirmation</p>
+        <p style="color:rgba(255,255,255,0.8);margin:6px 0 0;font-size:14px">Order received</p>
       </td></tr>
 
       <!-- Body -->
@@ -374,7 +392,7 @@ async function sendOrderReceipt(
         body: JSON.stringify({
             from: `${storeName} <${fromEmail}>`,
             to: [customer.email!],
-            subject: `Your order #${shortId} is confirmed — ${storeName}`,
+            subject: `Your order #${shortId} has been received — ${storeName}`,
             html,
         }),
     });

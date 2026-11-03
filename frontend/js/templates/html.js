@@ -21,29 +21,31 @@ export function featuredCardTemplate(product) {
     const filterClass = featuredFilterClass(product);
     const imagePath = resolveImagePath(product);
     const hasImage = imagePath && !imagePath.startsWith('data:');
+    const outOfStock = !product.inStock;
 
-    const picContent = hasImage
-        ? `data-setbg="${imagePath}"`
-        : '';
-    const picClass = hasImage ? 'featured__item__pic set-bg' : 'featured__item__pic';
-    const picInner = hasImage
-        ? ''
+    const imageHtml = hasImage
+        ? `<img src="${imagePath}" alt="${product.name}" loading="lazy" decoding="async" width="400" height="270">`
         : `<div class="product-emoji" style="font-size:80px;display:flex;align-items:center;justify-content:center;height:100%;">${product.fallbackEmoji || '🛒'}</div>`;
 
-    return `
-    <div class="col-6 col-lg-3 col-md-4 col-sm-6 mix ${filterClass}" data-product-id="${product.id}">
-        <div class="featured__item">
-            <div class="${picClass}" ${picContent}>
-                ${picInner}
-                <ul class="featured__item__pic__hover">
-                    <li><a href="#" data-add-to-cart="${product.id}">
+    const actionHtml = outOfStock
+        ? `<li><span class="out-of-stock-btn" title="Out of stock"><svg class="icon icon-ban" aria-hidden="true"><use href="/img/icons.svg#icon-ban"></use></svg></span></li>`
+        : `<li><a href="#" data-add-to-cart="${product.id}">
                         <svg class="icon icon-shopping-cart" aria-hidden="true"><use href="/img/icons.svg#icon-shopping-cart"></use></svg>
-                    </a></li>
+                    </a></li>`;
+
+    return `
+    <div class="col-6 col-lg-3 col-md-4 col-sm-6 mix ${filterClass}" data-product-id="${product.id}"${outOfStock ? ' data-out-of-stock="true"' : ''}>
+        <div class="featured__item${outOfStock ? ' product__item--out-of-stock' : ''}">
+            <div class="featured__item__pic">
+                ${imageHtml}
+                ${outOfStock ? '<div class="out-of-stock-badge">Out of Stock</div>' : ''}
+                <ul class="featured__item__pic__hover">
+                    ${actionHtml}
                 </ul>
             </div>
             <div class="featured__item__text">
                 <h6><a href="#">${product.name}</a></h6>
-                <h5>$${product.price.toFixed(2)}/${product.unit}</h5>
+                <h5>${outOfStock ? '<span class="price-muted">$' + product.price.toFixed(2) + '</span>' : '$' + product.price.toFixed(2)}/${product.unit}</h5>
             </div>
         </div>
     </div>`;
@@ -54,16 +56,23 @@ const IMAGE_PATH_PREFIXES = [
     'oils/', 'spices/', 'rice/', 'tea/', 'households/'
 ];
 
+const IMAGE_CACHE_VERSION = '2';
+
+function withImageVersion(path) {
+    if (!path || /^https?:\/\//i.test(path) || path.includes('?')) return path;
+    return `${path}?v=${IMAGE_CACHE_VERSION}`;
+}
+
 function resolveImagePath(product) {
     const raw = product.image != null ? String(product.image).trim() : '';
     if (!raw) return null;
     if (/^https?:\/\//i.test(raw)) return raw;
     if (IMAGE_PATH_PREFIXES.some(p => raw.startsWith(p))) {
-        return 'images/' + raw;
+        return withImageVersion('images/' + raw);
     }
-    if (raw.startsWith('images/')) return raw;
+    if (raw.startsWith('images/')) return withImageVersion(raw);
     if (raw.length <= 4) return null;
-    return raw;
+    return withImageVersion(raw);
 }
 
 export function shopProductCardTemplate(product) {

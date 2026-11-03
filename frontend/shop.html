@@ -12,7 +12,6 @@
     <title>Shop - Millad's Supermarket</title>
 
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="https://js.stripe.com">
     <link rel="preload" as="font" type="font/woff2" href="fonts/cairo/cairo-var.woff2" crossorigin>
 
     <!-- Self-hosted Cairo variable font (latin subset). Single 33KB woff2
@@ -86,37 +85,6 @@
 
     <!-- Header Section Begin -->
     <header class="header">
-        <div class="header__top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="header__top__left">
-                            <ul>
-                                <li><svg class="icon icon-envelope" aria-hidden="true"><use href="/img/icons.svg#icon-envelope"></use></svg> milladssupermarket@gmail.com</li>
-                                <li>Pickup Available - 460 Notre Dame Ave, Winnipeg</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="header__top__right">
-                            <div class="header__top__right__social">
-                                <a href="#" class="facebook" aria-label="Facebook">
-                                    <span class="tooltip" aria-hidden="true">Facebook</span>
-                                    <svg class="icon icon-facebook" aria-hidden="true"><use href="/img/icons.svg#icon-facebook"></use></svg>
-                                </a>
-                                <a href="#" class="instagram" aria-label="Instagram">
-                                    <span class="tooltip" aria-hidden="true">Instagram</span>
-                                    <svg class="icon icon-instagram" aria-hidden="true"><use href="/img/icons.svg#icon-instagram"></use></svg>
-                                </a>
-                            </div>
-                            <div class="header__top__right__auth">
-                                <a href="tel:+12049479558"><svg class="icon icon-phone" aria-hidden="true"><use href="/img/icons.svg#icon-phone"></use></svg> (204) 947-9558</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
@@ -403,7 +371,19 @@
                             </div>
                             <label for="deliveryPostal">Postal code</label>
                             <input type="text" id="deliveryPostal" name="deliveryPostal" autocomplete="postal-code" placeholder="e.g. R3B 1A1" inputmode="text">
-                            <p class="delivery-hint">We'll call you to confirm delivery time and any applicable fee. Delivery is within Winnipeg only.</p>
+                            <p class="delivery-fields__heading delivery-time__heading">Delivery time <span class="required-mark" aria-hidden="true">*</span></p>
+                            <div class="fulfillment-options" role="radiogroup" aria-label="Delivery time">
+                                <label class="fulfillment-option">
+                                    <input type="radio" name="deliverySlot" value="2pm">
+                                    <span class="fulfillment-option__text">2:00 PM <small>Afternoon</small></span>
+                                </label>
+                                <label class="fulfillment-option">
+                                    <input type="radio" name="deliverySlot" value="8pm">
+                                    <span class="fulfillment-option__text">8:00 PM <small>Evening</small></span>
+                                </label>
+                            </div>
+                            <p class="delivery-hint delivery-time__note">Arrival can be about 20–30 minutes earlier or later, depending on the day.</p>
+                            <p class="delivery-hint">We'll call you to confirm your address and any applicable fee. Delivery is within Winnipeg only.</p>
                         </div>
                         <div class="checkout-weight-notice" role="note">
                             <svg class="icon icon-info-circle" aria-hidden="true"><use href="/img/icons.svg#icon-info-circle"></use></svg>
@@ -426,7 +406,7 @@
                     <div class="order-summary">
                         <h4>Order Summary</h4>
                         <div id="checkoutItems"></div>
-                        <div class="checkout-total"><strong>Total: $<span id="checkoutTotal">0.00</span></strong></div>
+                        <div class="checkout-total"><strong>Total (CAD): $<span id="checkoutTotal">0.00</span></strong></div>
                     </div>
                     <div class="payment-section">
                         <h4>Payment</h4>
@@ -435,11 +415,23 @@
                             <span id="cashPaymentText"><strong>Cash on pickup</strong> — pay when you collect your order at the store.</span>
                         </p>
                     </div>
+                    <div class="checkout-legal">
+                        <p><strong>Before you place this order</strong></p>
+                        <p>Millad's Supermarket, 460 Notre Dame Avenue, Winnipeg, Manitoba. <a href="mailto:milladssupermarket@gmail.com">milladssupermarket@gmail.com</a> · <a href="tel:+12049479558">+1 204-947-9558</a></p>
+                        <p>The total above is in Canadian dollars and includes GST and PST where they apply. It does not include a delivery fee. Any delivery fee is quoted by phone before we accept the order. Pickup has no delivery charge. Delivery is within Winnipeg only.</p>
+                        <p>Payment is cash on pickup, or cash on delivery. Pickup is typically ready 2–4 hours after we accept the order. Delivery time is confirmed on that call.</p>
+                        <p>Sending this form is an offer to buy. The order is confirmed only when we call you. The final amount can change with the actual weight of fresh items and any delivery fee we quote.</p>
+                        <p>You can cancel by phone or email before we start preparing the order. Perishable goods are not returnable. We will correct defective or wrong items. This does not limit your rights under The Sale of Goods Act (Manitoba) or The Consumer Protection Act. <a href="/terms" target="_blank" rel="noopener">Terms</a> · <a href="/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></p>
+                    </div>
+                    <label class="age-confirm" for="checkoutAge">
+                        <input type="checkbox" id="checkoutAge" name="ageConfirm">
+                        <span>I confirm that I am at least 18 years old.</span>
+                    </label>
                     <button type="submit" class="place-order-btn">Place Order</button>
                 </form>
                 <div id="checkoutSuccess" class="checkout-success" hidden role="status" aria-live="polite">
                     <div class="checkout-success__icon" aria-hidden="true"><svg class="icon icon-check-circle" aria-hidden="true"><use href="/img/icons.svg#icon-check-circle"></use></svg></div>
-                    <h4 class="checkout-success__title">Order confirmed</h4>
+                    <h4 class="checkout-success__title">Order received</h4>
                     <p id="checkoutSuccessMessage" class="checkout-success__message"></p>
                     <p id="checkoutSuccessOrderRef" class="checkout-success__ref" hidden></p>
                     <button type="button" class="place-order-btn checkout-success__btn" id="checkoutSuccessDone">Continue shopping</button>
@@ -459,10 +451,9 @@
     <script src="js/vendor/main.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://js.stripe.com/v3/"></script>
 
     <!-- App (ES Module) -->
-    <script type="module" src="js/shop-app.js?v=7"></script>
+    <script type="module" src="js/shop-app.js?v=9"></script>
 </body>
 
 </html>

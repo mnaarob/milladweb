@@ -1,7 +1,7 @@
-import { signIn, signUp, onAuthChange, updateUserMetadata, getCurrentUser, resetPasswordForEmail, updateUserPassword } from './services/auth.js';
-import { getOrdersByUser } from './services/database.js?v=3';
+import { signIn, requestSignupCode, verifySignupCode, onAuthChange, updateUserMetadata, getCurrentUser, resetPasswordForEmail, updateUserPassword } from './services/auth.js';
+import { getOrdersByUser } from './services/database.js?v=4';
 import { initCart } from './modules/cart-ui.js';
-import { initCheckout } from './modules/checkout.js';
+import { initCheckout } from './modules/checkout.js?v=5';
 import { initAuthUI } from './modules/auth-ui.js';
 import { initAnimations } from './modules/animations.js';
 import { getTurnstileSiteKey } from './config/supabase.js';
@@ -10,8 +10,6 @@ import {
     isDisposableEmail,
     getPasswordErrors,
     checkHoneypot,
-    checkRateLimit,
-    checkSignInRateLimit,
     checkPasswordResetRateLimit
 } from './modules/auth-validation.js';
 
@@ -258,11 +256,6 @@ function setupForms() {
             errEl.textContent = 'Please enter a valid email address.';
             return;
         }
-        const signInRate = checkSignInRateLimit();
-        if (!signInRate.allowed) {
-            errEl.textContent = signInRate.message;
-            return;
-        }
         const captchaToken = getCaptchaToken(signInWidgetId);
         if (!captchaToken) {
             errEl.textContent = 'Please complete the CAPTCHA verification.';
@@ -282,66 +275,119 @@ function setupForms() {
         }
     });
 
+    let signupCodeSent = false;
+
+    function readSignupFields() {
+        return {
+            name: document.getElementById('signUpName').value.trim(),
+            email: document.getElementById('signUpEmail').value.trim(),
+            password: document.getElementById('signUpPassword').value,
+            honeypot: document.getElementById('signUpWebsite')?.value || '',
+            code: document.getElementById('signUpCode')?.value.trim() || '',
+        };
+    }
+
+    function signupFieldError(fields, { needCaptcha, needCode }) {
+        if (checkHoneypot(fields.honeypot)) return 'Signup failed. Please try again.';
+        if (!fields.name || fields.name.length < 2) return 'Please enter your full name.';
+        if (!isValidEmail(fields.email)) return 'Please enter a valid email address.';
+        if (isDisposableEmail(fields.email)) return 'Temporary or disposable email addresses are not allowed. Please use a real email.';
+        const pwdErr = getPasswordErrors(fields.password);
+        if (pwdErr) return pwdErr;
+        if (!document.getElementById('signUpAge')?.checked) return 'You must be at least 18 years old to create an account.';
+        if (needCode && !/^\d{6}$/.test(fields.code)) return 'Enter the 6-digit code from your email.';
+        if (needCaptcha && !getCaptchaToken(signUpWidgetId)) return 'Please complete the CAPTCHA verification.';
+        return '';
+    }
+
+    function showSignupCodeStep() {
+        signupCodeSent = true;
+        const group = document.getElementById('signUpCodeGroup');
+        const resend = document.getElementById('signUpResend');
+        const btn = document.getElementById('signUpBtn');
+        if (group) group.style.display = '';
+        if (resend) resend.style.display = '';
+        if (btn) btn.textContent = 'Create Account';
+    }
+
+    document.getElementById('signUpEmail')?.addEventListener('input', () => {
+        if (!signupCodeSent) return;
+        signupCodeSent = false;
+        const group = document.getElementById('signUpCodeGroup');
+        const resend = document.getElementById('signUpResend');
+        const btn = document.getElementById('signUpBtn');
+        const code = document.getElementById('signUpCode');
+        if (group) group.style.display = 'none';
+        if (resend) resend.style.display = 'none';
+        if (btn) btn.textContent = 'Email me a code';
+        if (code) code.value = '';
+    });
+
     document.getElementById('signUpForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const name = document.getElementById('signUpName').value.trim();
-        const phone = document.getElementById('signUpPhone').value.trim();
-        const email = document.getElementById('signUpEmail').value.trim();
-        const password = document.getElementById('signUpPassword').value;
-        const honeypot = document.getElementById('signUpWebsite')?.value || '';
+        const fields = readSignupFields();
         const errEl = document.getElementById('signUpError');
         const btn = document.getElementById('signUpBtn');
         errEl.textContent = '';
         errEl.style.color = '';
 
-        if (checkHoneypot(honeypot)) {
-            errEl.textContent = 'Signup failed. Please try again.';
-            return;
-        }
-        const rate = checkRateLimit();
-        if (!rate.allowed) {
-            errEl.textContent = rate.message;
-            return;
-        }
-        if (!name || name.length < 2) {
-            errEl.textContent = 'Please enter your full name.';
-            return;
-        }
-        if (!phone || phone.length < 7) {
-            errEl.textContent = 'Please enter a valid phone number.';
-            return;
-        }
-        if (!isValidEmail(email)) {
-            errEl.textContent = 'Please enter a valid email address.';
-            return;
-        }
-        if (isDisposableEmail(email)) {
-            errEl.textContent = 'Temporary or disposable email addresses are not allowed. Please use a real email.';
-            return;
-        }
-        const pwdErr = getPasswordErrors(password);
-        if (pwdErr) {
-            errEl.textContent = pwdErr;
-            return;
-        }
-        const captchaToken = getCaptchaToken(signUpWidgetId);
-        if (!captchaToken) {
-            errEl.textContent = 'Please complete the CAPTCHA verification.';
+        const problem = signupFieldError(fields, { needCaptcha: !signupCodeSent, needCode: signupCodeSent });
+        if (problem) {
+            errEl.textContent = problem;
             return;
         }
 
         if (btn) btn.disabled = true;
         try {
-            await signUp(email, password, { full_name: name, phone }, captchaToken);
-            errEl.textContent = 'Account created! Check your email to confirm, or sign in.';
-            errEl.style.color = 'var(--accent-color)';
-            resetCaptcha(signUpWidgetId);
+            if (!signupCodeSent) {
+                await requestSignupCode(fields.email, fields.password, fields.name, getCaptchaToken(signUpWidgetId));
+                showSignupCodeStep();
+                errEl.textContent = 'We sent a 6-digit code to your email. Enter it below.';
+                errEl.style.color = 'var(--accent-color)';
+                resetCaptcha(signUpWidgetId);
+                return;
+            }
+            const result = await verifySignupCode(fields.email, fields.password, fields.name, fields.code);
+            if (result?.needsSignIn) {
+                showTab('signin');
+                const signInErr = document.getElementById('signInError');
+                if (signInErr) {
+                    signInErr.textContent = 'Account created. Sign in with your email and password.';
+                    signInErr.style.color = 'var(--accent-color)';
+                }
+            }
         } catch (err) {
             errEl.textContent = err.message || 'Sign up failed. Please try again.';
             errEl.style.color = '';
-            resetCaptcha(signUpWidgetId);
+            if (!signupCodeSent) resetCaptcha(signUpWidgetId);
         } finally {
             if (btn) btn.disabled = false;
+        }
+    });
+
+    document.getElementById('signUpResend')?.addEventListener('click', async () => {
+        const fields = readSignupFields();
+        const errEl = document.getElementById('signUpError');
+        const resend = document.getElementById('signUpResend');
+        errEl.textContent = '';
+        errEl.style.color = '';
+        const problem = signupFieldError(fields, { needCaptcha: true, needCode: false });
+        if (problem) {
+            errEl.textContent = problem;
+            return;
+        }
+        if (resend) resend.disabled = true;
+        try {
+            await requestSignupCode(fields.email, fields.password, fields.name, getCaptchaToken(signUpWidgetId));
+            errEl.textContent = 'We sent a new code to your email.';
+            errEl.style.color = 'var(--accent-color)';
+            resetCaptcha(signUpWidgetId);
+        } catch (err) {
+            errEl.textContent = err.message || 'Could not send the verification email.';
+            errEl.style.color = '';
+            resetCaptcha(signUpWidgetId);
+        } finally {
+            if (resend) resend.disabled = false;
         }
     });
 

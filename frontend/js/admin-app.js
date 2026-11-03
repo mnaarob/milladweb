@@ -9,7 +9,7 @@ import {
     getOrders,
     updateOrderStatus,
     updateOrderPricing
-} from './services/database.js?v=3';
+} from './services/database.js?v=4';
 import { notifyCatalogChanged } from './modules/catalog-sync.js?v=3';
 
 let allOrders = [];
@@ -196,6 +196,8 @@ function displayOrders() {
         const deliveryAddr = order.customer?.delivery_address
             ? escapeHtml(String(order.customer.delivery_address))
             : '';
+        const slotLabels = { '2pm': '2:00 PM', '8pm': '8:00 PM' };
+        const deliverySlot = slotLabels[order.customer?.delivery_slot] || '';
         const adjustNote = pricing.adjust_note ? escapeHtml(String(pricing.adjust_note)) : '';
         const oid = order.id;
 
@@ -209,6 +211,7 @@ function displayOrders() {
                 <p><span class="order-detail__label">Customer</span> ${custName} · ${custPhone}</p>
                 <p><span class="order-detail__label">Fulfillment</span> ${escapeHtml(fulfillment)}</p>
                 ${deliveryAddr ? `<p><span class="order-detail__label">Deliver to</span> ${deliveryAddr}</p>` : ''}
+                ${deliverySlot ? `<p><span class="order-detail__label">Delivery time</span> ${deliverySlot}</p>` : ''}
                 <p><span class="order-detail__label">Items</span> ${items || 'N/A'}</p>
                 <p><span class="order-detail__label">Subtotal</span> $${subtotal}</p>
                 <p><span class="order-detail__label">GST / PST</span> $${gst} / $${pst}</p>
@@ -232,7 +235,7 @@ function displayOrders() {
                         <option value="completed" ${status === 'completed' ? 'selected' : ''}>Completed</option>
                     </select>
                     <button type="button" class="btn-adjust-total" onclick="toggleAdjustTotal('${oid}')" aria-label="Adjust final total">
-                        <i class="fas fa-dollar-sign" aria-hidden="true"></i> Adjust total
+                        <svg class="admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Adjust total
                     </button>
                 </div>
                 <div id="adjust-panel-${oid}" class="adjust-panel" hidden>

@@ -90,3 +90,26 @@ The app passes `redirectTo` as the current page path (e.g. `/account`); that ful
 ## Optional: same key for order receipts
 
 If you use **Tech to Store** / `store_secrets` for Resend, you can store the **same** API key there so receipts and auth both use one Resend account — still two **places** to configure (Supabase SMTP + your secrets / dashboard).
+
+## Future promotional email (CASL)
+
+Order receipts and password resets are transactional. Leave them as they are, and do not add promotions to those messages.
+
+Any future commercial email (a newsletter, a sale announcement, a coupon) must:
+
+1. Be sent only to people who gave express consent, or who have a CASL implied-consent relationship (for example a purchase in the last two years).
+2. Append `marketingEmailFooter()` from `supabase/functions/_shared/marketing-email.ts`. That footer includes the store name, 460 Notre Dame Avenue, Winnipeg, Manitoba, Canada, the store phone and email, and an unsubscribe link. The function refuses to render if `unsubscribeUrl` is missing.
+3. Honour an unsubscribe within 10 business days. Build the unsubscribe endpoint when the list exists. Do not send a promo until that link works.
+
+There is no subscribe form on the site. When one is added, put this control in the same group as the button, unchecked by default, separate from the terms of sale:
+
+```html
+<label>
+  <input type="checkbox" name="promoConsent" required>
+  I agree to receive promotional emails from Millad's Supermarket. I can unsubscribe at any time.
+</label>
+<p><a href="/privacy-policy">Privacy Policy</a></p>
+<button type="submit">Subscribe</button>
+```
+
+A link to the terms, by itself, is not consent to receive promotional email.

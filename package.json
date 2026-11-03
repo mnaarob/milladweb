@@ -1,8 +1,17 @@
 {
   "name": "milladweb",
   "version": "1.0.0",
+  "private": true,
   "description": "Millad's Supermarket - Grocery store website",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
+    "dev": "npm run dev -w server & npm run dev -w client",
+    "dev:client": "npm run dev -w client",
+    "dev:server": "npm run dev -w server",
+    "build:app": "npm run build -w server && npm run build -w client",
     "build": "node scripts/vercel-build.js",
     "deploy:place-order": "supabase functions deploy place-order --no-verify-jwt",
     "serve": "npx serve frontend -l 3000",

@@ -246,7 +246,6 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-
 
 const RATE_LIMIT_DEFAULTS = {
     signup: { key: 'millads_signup_attempts', windowMs: 60 * 60 * 1000, max: 5 },
-    signin: { key: 'millads_signin_attempts', windowMs: 60 * 60 * 1000, max: 10 },
     passwordReset: { key: 'millads_pwreset_attempts', windowMs: 60 * 60 * 1000, max: 5 },
 };
 
@@ -311,11 +310,6 @@ function checkRateLimitGeneric(storageKey, windowMs, max, label) {
 export function checkRateLimit() {
     const { key, windowMs, max } = RATE_LIMIT_DEFAULTS.signup;
     return checkRateLimitGeneric(key, windowMs, max, 'signup');
-}
-
-export function checkSignInRateLimit() {
-    const { key, windowMs, max } = RATE_LIMIT_DEFAULTS.signin;
-    return checkRateLimitGeneric(key, windowMs, max, 'sign-in');
 }
 
 export function checkPasswordResetRateLimit() {

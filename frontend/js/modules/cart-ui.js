@@ -1,5 +1,5 @@
-import * as cart from './cart.js';
-import { cartItemTemplate, pricingBreakdownTemplate } from '../templates/html.js';
+import * as cart from './cart.js?v=2';
+import { cartItemTemplate, pricingBreakdownTemplate } from '../templates/html.js?v=6';
 import { openCartModal, closeCartModal } from './animations.js';
 
 function renderCartItems() {

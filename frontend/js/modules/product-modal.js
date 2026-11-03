@@ -1,5 +1,5 @@
-import { getAllProducts } from './products.js?v=5';
-import { addToCartAndNotify } from './cart-ui.js';
+import { getAllProducts } from './products.js?v=6';
+import { addToCartAndNotify } from './cart-ui.js?v=4';
 import { lockBodyScroll, unlockBodyScroll } from './scroll-lock.js';
 
 const IMAGE_PREFIXES = [
@@ -11,9 +11,11 @@ function getImageUrl(product) {
     const raw = product?.image != null ? String(product.image).trim() : '';
     if (!raw) return null;
     if (/^https?:\/\//i.test(raw)) return raw;
-    if (IMAGE_PREFIXES.some(p => raw.startsWith(p))) return 'images/' + raw;
-    if (raw.startsWith('images/')) return raw;
-    return raw.length > 4 ? raw : null;
+    let path = raw;
+    if (IMAGE_PREFIXES.some(p => raw.startsWith(p))) path = 'images/' + raw;
+    else if (!raw.startsWith('images/') && raw.length <= 4) return null;
+    if (/^https?:\/\//i.test(path) || path.includes('?')) return path;
+    return path + '?v=3';
 }
 
 function openProductModal(product) {

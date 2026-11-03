@@ -411,10 +411,9 @@ function displayProducts() {
         const img = (p.image != null && String(p.image).trim()) || '';
         if (!img || img.length <= 4) return null;
         if (/^https?:\/\//i.test(img)) return img;
-        if (img.startsWith('images/')) return img;
-        const relPrefixes = ['meat/', 'dairy/', 'pantry/', 'vegetables/', 'bakery/', 'beverages/', 'fruits/', 'oils/', 'spices/', 'rice/', 'tea/', 'households/'];
-        if (relPrefixes.some(prefix => img.startsWith(prefix))) return 'images/' + img;
-        return 'images/' + img;
+        let path = img;
+        if (!img.startsWith('images/')) path = 'images/' + img;
+        return path.includes('?') ? path : path + '?v=3';
     };
 
     container.innerHTML = `

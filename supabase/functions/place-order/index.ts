@@ -32,6 +32,25 @@ const MAX_ITEMS = 50;
 const TAX_GST = 0.05;
 const TAX_PST = 0.07;
 
+function roundMoney(n: number): number {
+    return Math.round((n + Number.EPSILON) * 100) / 100;
+}
+
+/** Same line math as frontend/js/modules/cart.js so estimated-weight items match the cart. */
+function lineAmount(product: {
+    price: number;
+    variable_weight?: boolean;
+    display_price?: string | null;
+    estimated_max_weight?: number | null;
+}, quantity: number): number {
+    const price = Number(product.price) || 0;
+    const qty = Number(quantity) || 0;
+    if (product.variable_weight && product.display_price === 'estimated') {
+        return price * (Number(product.estimated_max_weight) || 1) * qty;
+    }
+    return price * qty;
+}
+
 interface OrderItem {
     id: string;
     name: string;
@@ -40,6 +59,9 @@ interface OrderItem {
     quantity: number;
     category: string;
     notes?: string;
+    variableWeight?: boolean;
+    displayPrice?: string | null;
+    estimatedMaxWeight?: number | null;
 }
 
 type DeliverySlot = '2pm' | '8pm';
@@ -173,7 +195,7 @@ Deno.serve(async (req: Request) => {
         const itemIds = [...new Set(items.map(i => i.id))];
         const { data: validProducts, error: prodErr } = await supabase
             .from('products')
-            .select('id, price, name, tax_exempt')
+            .select('id, price, name, tax_exempt, variable_weight, display_price, estimated_max_weight')
             .eq('store_id', store_id)
             .in('id', itemIds);
 
@@ -183,7 +205,15 @@ Deno.serve(async (req: Request) => {
         }
 
         const productMap = new Map(
-            (validProducts ?? []).map((p: { id: string; price: number; name: string; tax_exempt: boolean }) => [p.id, p])
+            (validProducts ?? []).map((p: {
+                id: string;
+                price: number;
+                name: string;
+                tax_exempt: boolean;
+                variable_weight?: boolean;
+                display_price?: string | null;
+                estimated_max_weight?: number | null;
+            }) => [p.id, p])
         );
 
         const missingIds = itemIds.filter(id => !productMap.has(id));
@@ -194,21 +224,24 @@ Deno.serve(async (req: Request) => {
         let taxableSubtotal = 0;
         const verifiedItems = items.map(item => {
             const product = productMap.get(item.id)!;
-            const lineTotal = product.price * item.quantity;
+            const lineTotal = lineAmount(product, item.quantity);
             serverSubtotal += lineTotal;
             if (!product.tax_exempt) taxableSubtotal += lineTotal;
             return {
                 ...item,
-                price: product.price,
+                price: Number(product.price),
                 name: product.name,
+                variableWeight: !!product.variable_weight,
+                displayPrice: product.display_price || null,
+                estimatedMaxWeight: product.estimated_max_weight || null,
             };
         });
 
-        serverSubtotal = Math.round(serverSubtotal * 100) / 100;
-        taxableSubtotal = Math.round(taxableSubtotal * 100) / 100;
-        const serverGst = Math.round(taxableSubtotal * TAX_GST * 100) / 100;
-        const serverPst = Math.round(taxableSubtotal * TAX_PST * 100) / 100;
-        const serverTotal = Math.round((serverSubtotal + serverGst + serverPst) * 100) / 100;
+        serverSubtotal = roundMoney(serverSubtotal);
+        taxableSubtotal = roundMoney(taxableSubtotal);
+        const serverGst = roundMoney(taxableSubtotal * TAX_GST);
+        const serverPst = roundMoney(taxableSubtotal * TAX_PST);
+        const serverTotal = roundMoney(serverSubtotal + serverGst + serverPst);
 
         // Sanity-check client total (reject if tampered by more than $0.01)
         if (Math.abs(pricing.total - serverTotal) > 0.01) {
@@ -312,7 +345,12 @@ async function sendOrderReceipt(
             ${escHtml(i.name)}${i.notes ? ` <span style="color:#888;font-size:12px">(${escHtml(i.notes)})</span>` : ''}
           </td>
           <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:center;color:#555">${i.quantity}</td>
-          <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:right;color:#333">$${(i.price * i.quantity).toFixed(2)}</td>
+          <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:right;color:#333">$${lineAmount({
+                price: i.price,
+                variable_weight: i.variableWeight,
+                display_price: i.displayPrice,
+                estimated_max_weight: i.estimatedMaxWeight,
+            }, i.quantity).toFixed(2)}</td>
         </tr>`).join('');
 
     const html = `<!DOCTYPE html>

@@ -120,9 +120,21 @@ export function initBlurUpImages() {
 
 var preloaded = new Set();
 
+function eventElement(target) {
+    if (!target) return null;
+    if (target.nodeType === 1) return target;
+    return target.parentElement || null;
+}
+
+function closestAnchor(target) {
+    var el = eventElement(target);
+    if (!el || typeof el.closest !== 'function') return null;
+    return el.closest('a[href]');
+}
+
 function initPrefetchOnHover() {
     document.addEventListener('pointerenter', function (e) {
-        var link = e.target.closest('a[href]');
+        var link = closestAnchor(e.target);
         if (!link) return;
         var href = link.getAttribute('href');
         if (!href || href.startsWith('#') || preloaded.has(href)) return;
@@ -153,7 +165,7 @@ export function initAnimations() {
 
     if (!hasNativeViewTransitions) {
         document.addEventListener('click', function (e) {
-            var link = e.target.closest('a[href]');
+            var link = closestAnchor(e.target);
             if (!link) return;
             var href = link.getAttribute('href');
             if (!href || href === '#' || href.charAt(0) === '#') return;

@@ -2,6 +2,19 @@ const GST_RATE = 0.05;
 const PST_RATE = 0.07;
 const STORAGE_KEY = 'millads_cart';
 
+function money(n) {
+    return Math.round((Number(n) + Number.EPSILON) * 100) / 100;
+}
+
+function lineAmount(item) {
+    const price = Number(item.price) || 0;
+    const qty = Number(item.quantity) || 0;
+    if (item.variableWeight && item.displayPrice === 'estimated') {
+        return price * (Number(item.estimatedMaxWeight) || 1) * qty;
+    }
+    return price * qty;
+}
+
 let items = [];
 const listeners = new Set();
 
@@ -84,27 +97,35 @@ export function getCount() {
     return items.reduce((sum, i) => sum + i.quantity, 0);
 }
 
+/** Refresh prices and tax flags from the current catalog so checkout matches the server. */
+export function applyCatalog(catalog) {
+    const byId = new Map((catalog || []).map(p => [String(p.id), p]));
+    items = items.map(item => {
+        const fresh = byId.get(String(item.id));
+        if (!fresh) return item;
+        return {
+            ...item,
+            name: fresh.name || item.name,
+            price: Number(fresh.price),
+            taxExempt: !!fresh.taxExempt,
+            variableWeight: !!fresh.variableWeight,
+            displayPrice: fresh.displayPrice || null,
+            estimatedMaxWeight: fresh.estimatedMaxWeight || null,
+        };
+    });
+    persist();
+}
+
 export function getPricing() {
-    const subtotal = items.reduce((sum, item) => {
-        if (item.variableWeight && item.displayPrice === 'estimated') {
-            return sum + (item.price * (item.estimatedMaxWeight || 1) * item.quantity);
-        }
-        return sum + (item.price * item.quantity);
-    }, 0);
+    const subtotal = money(items.reduce((sum, item) => sum + lineAmount(item), 0));
+    const taxableSubtotal = money(items.reduce((sum, item) => {
+        if (item.taxExempt) return sum;
+        return sum + lineAmount(item);
+    }, 0));
+    const gst = money(taxableSubtotal * GST_RATE);
+    const pst = money(taxableSubtotal * PST_RATE);
 
-    const taxableSubtotal = items
-        .filter(i => !i.taxExempt)
-        .reduce((sum, item) => {
-            if (item.variableWeight && item.displayPrice === 'estimated') {
-                return sum + (item.price * (item.estimatedMaxWeight || 1) * item.quantity);
-            }
-            return sum + (item.price * item.quantity);
-        }, 0);
-
-    const gst = taxableSubtotal * GST_RATE;
-    const pst = taxableSubtotal * PST_RATE;
-
-    return { subtotal, taxableSubtotal, gst, pst, total: subtotal + gst + pst };
+    return { subtotal, taxableSubtotal, gst, pst, total: money(subtotal + gst + pst) };
 }
 
 export function hasTaxExemptItems() {

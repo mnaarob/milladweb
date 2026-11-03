@@ -1,8 +1,8 @@
-import * as cart from './cart.js';
-import { saveOrder } from '../services/database.js?v=4';
+import * as cart from './cart.js?v=2';
+import { saveOrder, getProducts } from '../services/database.js?v=4';
 import { getCurrentUser } from '../services/auth.js';
-import { checkoutItemTemplate, checkoutPricingTemplate } from '../templates/html.js';
-import { closeCartModal } from './animations.js';
+import { checkoutItemTemplate, checkoutPricingTemplate } from '../templates/html.js?v=6';
+import { closeCartModal } from './animations.js?v=5';
 import { lockBodyScroll, unlockBodyScroll } from './scroll-lock.js';
 
 const PAYMENT_HTML = {
@@ -209,6 +209,13 @@ async function handleSubmit(e) {
         const email = document.getElementById('customerEmail')?.value?.trim() || undefined;
         const paymentMethod = 'cash';
         const paymentToken = null;
+
+        try {
+            cart.applyCatalog(await getProducts());
+        } catch {
+            /* Keep the prices already in the cart if the catalog cannot be refreshed. */
+        }
+        populateCheckoutItems();
 
         const items = cart.getItems();
         const pricing = cart.getPricing();

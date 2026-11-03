@@ -56,7 +56,7 @@ const IMAGE_PATH_PREFIXES = [
     'oils/', 'spices/', 'rice/', 'tea/', 'households/'
 ];
 
-const IMAGE_CACHE_VERSION = '2';
+const IMAGE_CACHE_VERSION = '3';
 
 function withImageVersion(path) {
     if (!path || /^https?:\/\//i.test(path) || path.includes('?')) return path;

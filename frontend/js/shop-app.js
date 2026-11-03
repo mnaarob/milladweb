@@ -5,12 +5,12 @@ import {
     renderCategories,
     PRODUCTS_PER_PAGE,
     clearProductsCache
-} from './modules/products.js?v=5';
-import { initCart } from './modules/cart-ui.js?v=3';
-import { initCheckout } from './modules/checkout.js?v=5';
+} from './modules/products.js?v=6';
+import { initCart } from './modules/cart-ui.js?v=4';
+import { initCheckout } from './modules/checkout.js?v=6';
 import { initSearch } from './modules/search.js?v=3';
-import { initAnimations, initBlurUpImages } from './modules/animations.js?v=4';
-import { initProductModal } from './modules/product-modal.js?v=5';
+import { initAnimations, initBlurUpImages } from './modules/animations.js?v=5';
+import { initProductModal } from './modules/product-modal.js?v=6';
 import { initAuthUI } from './modules/auth-ui.js?v=3';
 
 let currentCategory = 'all';

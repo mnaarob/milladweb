@@ -122,11 +122,11 @@ async function rewriteIndexHtml() {
 
     html = html.replace(
         preloadBlockRegex,
-        '<link rel="preload" href="css/home.min.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">'
+        '<link rel="preload" href="css/home.min.css?v=3" as="style" onload="this.onload=null;this.rel=\'stylesheet\'">'
     );
     html = html.replace(
         noscriptBlockRegex,
-        '<link rel="stylesheet" href="css/home.min.css">'
+        '<link rel="stylesheet" href="css/home.min.css?v=3">'
     );
 
     fs.writeFileSync(indexPath, html);

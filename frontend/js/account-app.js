@@ -1,9 +1,9 @@
 import { signIn, requestSignupCode, verifySignupCode, onAuthChange, updateUserMetadata, getCurrentUser, resetPasswordForEmail, updateUserPassword } from './services/auth.js';
 import { getOrdersByUser } from './services/database.js?v=4';
-import { initCart } from './modules/cart-ui.js';
-import { initCheckout } from './modules/checkout.js?v=5';
+import { initCart } from './modules/cart-ui.js?v=4';
+import { initCheckout } from './modules/checkout.js?v=6';
 import { initAuthUI } from './modules/auth-ui.js';
-import { initAnimations } from './modules/animations.js';
+import { initAnimations } from './modules/animations.js?v=5';
 import { getTurnstileSiteKey } from './config/supabase.js';
 import {
     isValidEmail,

@@ -1,12 +1,17 @@
 const PREFIXES = ['meat/', 'pantry/', 'dairy/', 'vegetables/', 'bakery/', 'beverages/', 'fruits/', 'oils/', 'spices/', 'rice/', 'tea/', 'households/'];
 
+function versioned(path: string) {
+    if (/^https?:\/\//i.test(path) || path.includes('?')) return path;
+    return `${path}?v=3`;
+}
+
 export function productImage(image: string) {
     const raw = image.trim();
     if (!raw || raw.length <= 4) return null;
     if (/^https?:\/\//i.test(raw)) return raw;
-    if (PREFIXES.some((prefix) => raw.startsWith(prefix))) return `/images/${raw}`;
-    if (raw.startsWith('images/')) return `/${raw}`;
-    return raw.startsWith('/') ? raw : `/${raw}`;
+    if (PREFIXES.some((prefix) => raw.startsWith(prefix))) return versioned(`/images/${raw}`);
+    if (raw.startsWith('images/')) return versioned(`/${raw}`);
+    return versioned(raw.startsWith('/') ? raw : `/${raw}`);
 }
 
 export function money(value: number | undefined) {

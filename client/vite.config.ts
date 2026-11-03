@@ -51,10 +51,12 @@ function storeAssets(): Plugin {
         },
         closeBundle() {
             const out = path.resolve(root, 'dist');
-            for (const folder of ['images', 'img', 'fonts']) {
+            for (const folder of ['images', 'img', 'fonts', 'blog']) {
                 const from = path.join(storefront, folder);
                 if (fs.existsSync(from)) fs.cpSync(from, path.join(out, folder), { recursive: true });
             }
+            const favicon = path.join(storefront, 'favicon.svg');
+            if (fs.existsSync(favicon)) fs.copyFileSync(favicon, path.join(out, 'favicon.svg'));
         },
     };
 }

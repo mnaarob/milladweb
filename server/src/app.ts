@@ -9,11 +9,35 @@ import { authRouter } from './modules/auth/auth.router.js';
 import { ordersRouter } from './modules/orders/orders.router.js';
 import { productsRouter } from './modules/products/products.router.js';
 
+const allowedOrigins = new Set([
+    env.clientOrigin,
+    'https://milladssupermarket.com',
+    'https://www.milladssupermarket.com',
+    'http://localhost:5173',
+]);
+
 export function createApp() {
     const app = express();
     app.disable('x-powered-by');
+    app.set('trust proxy', 1);
+    app.use((req, _res, next) => {
+        const url = req.url || '/';
+        if (!url.startsWith('/api')) {
+            req.url = `/api${url.startsWith('/') ? url : `/${url}`}`;
+        }
+        next();
+    });
     app.use(helmet());
-    app.use(cors({ origin: env.clientOrigin, credentials: true }));
+    app.use(cors({
+        origin(origin, callback) {
+            if (!origin || allowedOrigins.has(origin)) {
+                callback(null, true);
+                return;
+            }
+            callback(null, false);
+        },
+        credentials: true,
+    }));
     app.use(express.json({ limit: '1mb' }));
     const logger = pino();
     app.use((req, res, next) => {

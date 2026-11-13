@@ -31,42 +31,62 @@
         /* ── Top nav bar ── */
         .blog-nav {
             background: #2D6A4F;
-            padding: 14px 24px;
+            min-height: 56px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
+            flex-wrap: nowrap;
         }
         .blog-nav__logo {
             color: #fff;
             font-size: 20px;
             font-weight: 800;
+            line-height: 1.2;
             text-decoration: none;
             letter-spacing: -0.3px;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .blog-nav__back {
             color: #c8e6c9;
             font-size: 14px;
             font-weight: 600;
+            line-height: 1;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            flex: 0 0 auto;
+            white-space: nowrap;
             transition: color 0.2s;
+        }
+        .blog-nav__back svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+            flex: 0 0 16px;
         }
         .blog-nav__back:hover { color: #fff; }
 
         /* ── Hero image ── */
         .blog-hero {
             width: 100%;
-            max-height: 440px;
+            height: 260px;
             overflow: hidden;
-            background: #1B4332;
+            background: #eef6f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .blog-hero img {
-            width: 100%;
-            height: auto;
-            max-height: 440px;
-            object-fit: cover;
+            width: auto;
+            height: 200px;
+            max-width: min(100%, 420px);
+            object-fit: contain;
             display: block;
         }
 
@@ -143,7 +163,10 @@
         @media (max-width: 600px) {
             .blog-article { padding: 28px 16px 60px; }
             .blog-article h1 { font-size: 24px; }
-            .blog-nav__logo { font-size: 17px; }
+            .blog-nav { padding: 8px 14px; }
+            .blog-nav__logo { font-size: 15px; }
+            .blog-hero { height: 168px; }
+            .blog-hero img { height: 132px; }
         }
     </style>
 </head>
@@ -152,12 +175,11 @@
 
 <nav class="blog-nav">
     <a class="blog-nav__logo" href="/">Millad's Supermarket</a>
-    <a class="blog-nav__back" href="/"><svg class="icon icon-arrow-left" aria-hidden="true"><use href="/img/icons.svg#icon-arrow-left"></use></svg> Back to Home</a>
+    <a class="blog-nav__back" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" d="M15 19 8 12l7-7"/></svg> Back</a>
 </nav>
 
 <div class="blog-hero">
-    <img src="../img/blog/blog01.jpg" alt="Fresh halal meat cuts at Millad's Supermarket" loading="eager" decoding="async"
-         onerror="this.src='../images/meat/beef-boneless.jpg'">
+    <img src="../img/blog/blog01.webp" alt="Fresh halal meat cuts at Millad's Supermarket" loading="eager" decoding="async">
 </div>
 
 <article class="blog-article">

@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { TurnstileWidget, type TurnstileHandle } from '../components/TurnstileWidget';
 import { api } from '../lib/api';
@@ -194,23 +194,104 @@ export function AccountPage() {
                 <div className="auth-card">
                     <h2>Your account</h2>
                     <p className="auth-card__intro">{session.user.email}</p>
-                    <p className="checkout-note">These are the orders placed with this account.</p>
+                    <ProfileForm />
                     <div className="auth-card__links">
                         <button type="button" onClick={() => supabase.auth.signOut()}>Sign out</button>
                     </div>
+                    <h3>Orders</h3>
+                    <p className="checkout-note">These are the orders placed with this account.</p>
                     {orders.isLoading && <p className="checkout-note">Loading orders…</p>}
                     {orders.data?.length === 0 && <p className="checkout-note">No orders yet.</p>}
                     <ul className="auth-orders">
                         {orders.data?.map((order) => (
                             <li key={order.id}>
-                                <strong>#{order.id.slice(-6).toUpperCase()}</strong>
-                                <span>{order.status}</span>
-                                <b>{money(order.pricing.total)} CAD</b>
+                                <div className="auth-orders__top">
+                                    <strong>#{order.id.slice(-6).toUpperCase()}</strong>
+                                    <span>{order.status}</span>
+                                    <b>{money(order.pricing.adjusted_total ?? order.pricing.total)} CAD</b>
+                                </div>
+                                <ul className="auth-orders__items">
+                                    {(order.items ?? []).filter((item) => !item.cancelled).map((item, index) => (
+                                        <li key={`${item.id ?? item.name}-${index}`}>
+                                            {item.name || 'Item'} · {item.ordered_quantity ?? item.quantity ?? 1}{item.unit ? ` ${item.unit}` : ''}
+                                        </li>
+                                    ))}
+                                </ul>
                             </li>
                         ))}
                     </ul>
                 </div>
             </div>
         </section>
+    );
+}
+
+function ProfileForm() {
+    const session = useSession();
+    const metadata = session.user?.user_metadata ?? {};
+    const [name, setName] = useState(String(metadata.full_name || ''));
+    const [phone, setPhone] = useState(String(metadata.phone || '+1 '));
+    const [busy, setBusy] = useState(false);
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        setName(String(metadata.full_name || ''));
+        setPhone(String(metadata.phone || '+1 '));
+    }, [metadata.full_name, metadata.phone]);
+
+    async function save(event: FormEvent) {
+        event.preventDefault();
+        setError('');
+        setMessage('');
+        if (name.trim().length < 2) {
+            setError('Enter your name.');
+            return;
+        }
+        const digits = phone.replace(/\D/g, '');
+        if (digits.length !== 11 || !digits.startsWith('1')) {
+            setError('Phone number must start with +1 and include 10 digits.');
+            return;
+        }
+        setBusy(true);
+        try {
+            const { error: updateError } = await supabase.auth.updateUser({
+                data: { full_name: name.trim(), phone: phone.trim() },
+            });
+            if (updateError) throw updateError;
+            setMessage('Profile saved.');
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Profile could not be saved.');
+        } finally {
+            setBusy(false);
+        }
+    }
+
+    return (
+        <form className="profile-form" onSubmit={save}>
+            <h3>Profile</h3>
+            <label className="checkout-field">
+                <span>Name</span>
+                <input required minLength={2} autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} />
+            </label>
+            <label className="checkout-field">
+                <span>Phone</span>
+                <input
+                    required
+                    type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    placeholder="+1 204-555-0100"
+                    value={phone}
+                    onChange={(event) => {
+                        const digits = event.target.value.replace(/\D/g, '').replace(/^1/, '').slice(0, 10);
+                        setPhone(`+1 ${digits}`);
+                    }}
+                />
+            </label>
+            {error && <p className="form-error">{error}</p>}
+            {message && <p className="auth-card__note">{message}</p>}
+            <button className="checkout-submit" type="submit" disabled={busy}>{busy ? 'Saving…' : 'Save profile'}</button>
+        </form>
     );
 }

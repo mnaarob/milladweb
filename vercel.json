@@ -14,25 +14,13 @@
       "source": "/scripts/migrate-products.html",
       "destination": "/scripts/migrate-products",
       "permanent": true
-    },
-    {
-      "source": "/blog/understanding-halal-meat-quality.html",
-      "destination": "/blog/understanding-halal-meat-quality",
-      "permanent": true
-    },
-    {
-      "source": "/blog/perfect-biryani-tips.html",
-      "destination": "/blog/perfect-biryani-tips",
-      "permanent": true
-    },
-    {
-      "source": "/blog/storing-fresh-meat-properly.html",
-      "destination": "/blog/storing-fresh-meat-properly",
-      "permanent": true
     }
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api?path=$1" },
+    { "source": "/blog/understanding-halal-meat-quality", "destination": "/blog/understanding-halal-meat-quality.html" },
+    { "source": "/blog/perfect-biryani-tips", "destination": "/blog/perfect-biryani-tips.html" },
+    { "source": "/blog/storing-fresh-meat-properly", "destination": "/blog/storing-fresh-meat-properly.html" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [

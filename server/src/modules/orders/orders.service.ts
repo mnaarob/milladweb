@@ -17,6 +17,13 @@ function isStorePhone(value: string) {
     return digits.length === 11 && digits.startsWith('1');
 }
 
+function isWinnipegAddress(value: string | undefined) {
+    const address = value?.trim() ?? '';
+    return address.length >= 8
+        && /winnipeg/i.test(address)
+        && /[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d/i.test(address);
+}
+
 const orderSchema = z.object({
     ageConfirmed: z.literal(true, { errorMap: () => ({ message: 'You must be at least 18 years old to place an order.' }) }),
     customer: z.object({
@@ -27,10 +34,10 @@ const orderSchema = z.object({
         deliveryAddress: z.string().optional(),
         deliverySlot: z.enum(['2pm', '8pm']).optional(),
     }).superRefine((customer, ctx) => {
-        if (customer.fulfillment === 'delivery' && (customer.deliveryAddress?.trim().length ?? 0) < 5) {
+        if (customer.fulfillment === 'delivery' && !isWinnipegAddress(customer.deliveryAddress)) {
             ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: 'Enter a delivery address with the street, Winnipeg, and postal code.',
+                message: 'Enter a Winnipeg street address and a Canadian postal code.',
                 path: ['deliveryAddress'],
             });
         }
@@ -75,8 +82,8 @@ export async function placeOrder(input: OrderInput, userId: string | null) {
     const fulfillment = input.customer.fulfillment;
     const deliveryAddress = input.customer.deliveryAddress?.trim();
     const deliverySlot = input.customer.deliverySlot;
-    if (fulfillment === 'delivery' && (!deliveryAddress || deliveryAddress.length < 5)) {
-        throw new HttpError(400, 'Please enter a complete delivery address (street, city, postal code).');
+    if (fulfillment === 'delivery' && !isWinnipegAddress(deliveryAddress)) {
+        throw new HttpError(400, 'Enter a Winnipeg street address and a Canadian postal code.');
     }
     if (fulfillment === 'delivery' && !deliverySlot) {
         throw new HttpError(400, 'Choose a delivery time.');

@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { DELIVERY_FEE, DELIVERY_SLOTS, FREE_DELIVERY_AT, deliveryFee, type DeliverySlot } from '../lib/delivery';
+import { DELIVERY_FEE, DELIVERY_SLOTS, FREE_DELIVERY_AT, deliveryFee, formatDeliveryAddress, isCanadianPostal, type DeliverySlot } from '../lib/delivery';
 import { money, productImage } from '../lib/images';
 import { formatAmount, isSoldByWeight } from '../lib/quantity';
 import { api } from '../lib/api';
@@ -28,7 +28,9 @@ export function CheckoutPage() {
     const [phone, setPhone] = useState('+1 ');
     const [email, setEmail] = useState(session.user?.email ?? '');
     const [fulfillment, setFulfillment] = useState<'pickup' | 'delivery'>('pickup');
-    const [address, setAddress] = useState('');
+    const [street, setStreet] = useState('');
+    const [unit, setUnit] = useState('');
+    const [postal, setPostal] = useState('');
     const [slot, setSlot] = useState<DeliverySlot | ''>('');
     const [age, setAge] = useState(false);
     const [error, setError] = useState('');
@@ -63,8 +65,12 @@ export function CheckoutPage() {
             setError('You must be at least 18 years old to place an order.');
             return;
         }
-        if (fulfillment === 'delivery' && address.trim().length < 5) {
-            setError('Enter a delivery address with the street, Winnipeg, and postal code.');
+        if (fulfillment === 'delivery' && street.trim().length < 3) {
+            setError('Enter the street address.');
+            return;
+        }
+        if (fulfillment === 'delivery' && !isCanadianPostal(postal)) {
+            setError('Enter a Canadian postal code, such as R3B 1A1.');
             return;
         }
         if (fulfillment === 'delivery' && !slot) {
@@ -83,7 +89,7 @@ export function CheckoutPage() {
                         phone,
                         email,
                         fulfillment,
-                        deliveryAddress: address,
+                        deliveryAddress: fulfillment === 'delivery' ? formatDeliveryAddress(street, unit, postal) : '',
                         ...(fulfillment === 'delivery' && slot ? { deliverySlot: slot } : {}),
                     },
                     items: cart.items.map((item) => ({ id: item.id, quantity: item.quantity, notes: item.notes })),
@@ -169,8 +175,17 @@ export function CheckoutPage() {
                                 {fulfillment === 'delivery' && (
                                     <>
                                         <label className="checkout-field">
-                                            <span>Delivery address</span>
-                                            <input required minLength={5} autoComplete="street-address" placeholder="Street, Winnipeg, postal code" value={address} onChange={(event) => setAddress(event.target.value)} />
+                                            <span>Street</span>
+                                            <input required minLength={3} autoComplete="address-line1" placeholder="460 Notre Dame Avenue" value={street} onChange={(event) => setStreet(event.target.value)} />
+                                        </label>
+                                        <label className="checkout-field">
+                                            <span>Unit</span>
+                                            <input autoComplete="address-line2" placeholder="Optional" value={unit} onChange={(event) => setUnit(event.target.value)} />
+                                        </label>
+                                        <label className="checkout-field">
+                                            <span>Postal code</span>
+                                            <input required autoComplete="postal-code" placeholder="R3B 1A1" aria-describedby="checkout-postal-hint" value={postal} onChange={(event) => setPostal(event.target.value.toUpperCase())} />
+                                            <small id="checkout-postal-hint">Delivery is in Winnipeg. Use a Canadian postal code.</small>
                                         </label>
                                         <p className="checkout-label">Delivery time</p>
                                         <div className="choice-row" role="radiogroup" aria-label="Delivery time">

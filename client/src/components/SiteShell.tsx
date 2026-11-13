@@ -11,22 +11,36 @@ export function SiteShell() {
     const cart = useCart();
     const session = useSession();
     const [cartOpen, setCartOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <>
-            <header className="header">
+            <header className={`header${menuOpen ? ' is-open' : ''}`}>
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-3">
                             <div className="header__logo">
-                                <Link to="/"><h2 style={{ color: '#2D6A4F', fontWeight: 700 }}>Millad&apos;s Supermarket</h2></Link>
+                                <Link to="/" onClick={() => setMenuOpen(false)}>
+                                    <img src="/favicon.svg" alt="" width="36" height="36" />
+                                    <h2>Millad&apos;s Supermarket</h2>
+                                </Link>
+                                <button
+                                    type="button"
+                                    className="header__toggle"
+                                    aria-expanded={menuOpen}
+                                    aria-controls="site-menu"
+                                    onClick={() => setMenuOpen((open) => !open)}
+                                >
+                                    {menuOpen ? 'Close' : 'Menu'}
+                                </button>
                             </div>
                         </div>
                         <div className="col-lg-6">
-                            <nav className="header__menu">
+                            <nav className="header__menu" id="site-menu" onClick={() => setMenuOpen(false)}>
                                 <ul>
                                     <li><NavLink to="/">Home</NavLink></li>
                                     <li><NavLink to="/shop">Shop</NavLink></li>
+                                    <li><NavLink to="/blog">Blog</NavLink></li>
                                     {session.isStaff && <li><NavLink to="/admin">Dashboard</NavLink></li>}
                                     <li><a href="#contact-info">Contact</a></li>
                                 </ul>

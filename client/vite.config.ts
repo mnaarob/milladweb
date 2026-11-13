@@ -6,8 +6,13 @@ import { defineConfig, type Plugin } from 'vite';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const storefront = path.resolve(root, '../frontend');
-const assetPrefixes = ['/images/', '/img/', '/fonts/'];
-const storefrontPages = ['/privacy-policy.html', '/terms.html', '/blog.html', '/blog-details.html', '/blog-post.html', '/favicon.svg'];
+const assetPrefixes = ['/images/', '/img/', '/fonts/', '/blog/'];
+const storefrontPages = ['/favicon.svg'];
+const blogArticles = [
+    '/blog/understanding-halal-meat-quality',
+    '/blog/perfect-biryani-tips',
+    '/blog/storing-fresh-meat-properly',
+];
 
 function storeAssets(): Plugin {
     const types: Record<string, string> = {
@@ -23,12 +28,12 @@ function storeAssets(): Plugin {
         '.css': 'text/css; charset=utf-8',
     };
     const serve = (urlPath: string, res: import('node:http').ServerResponse, next: () => void) => {
-        const allowed = assetPrefixes.some((prefix) => urlPath.startsWith(prefix)) || storefrontPages.includes(urlPath);
+        const allowed = assetPrefixes.some((prefix) => urlPath.startsWith(prefix)) || storefrontPages.includes(urlPath) || blogArticles.includes(urlPath);
         if (!allowed) {
             next();
             return;
         }
-        const file = path.normalize(path.join(storefront, urlPath));
+        const file = path.normalize(path.join(storefront, blogArticles.includes(urlPath) ? `${urlPath}.html` : urlPath));
         if (!file.startsWith(storefront) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
             next();
             return;

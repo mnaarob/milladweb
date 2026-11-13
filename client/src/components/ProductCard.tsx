@@ -1,11 +1,13 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { money, productImage } from '../lib/images';
 import { isSoldByWeight } from '../lib/quantity';
 import type { Product } from '../lib/types';
 import { ProductPicker } from './ProductPicker';
 
-function openPicker(event: { preventDefault: () => void }, setOpen: (open: boolean) => void) {
+function openPicker(event: { preventDefault: () => void; stopPropagation: () => void }, setOpen: (open: boolean) => void) {
     event.preventDefault();
+    event.stopPropagation();
     setOpen(true);
 }
 
@@ -15,11 +17,12 @@ export function FeaturedCard({ product }: { product: Product }) {
     const outOfStock = !product.inStock;
     return (
         <div className="col-6 col-lg-3 col-md-4 col-sm-6" data-product-id={product.id}>
-            <div className="featured__item product-card" onClick={() => setOpen(true)}>
+            <div className="featured__item product-card">
                 <div
                     className={image ? 'featured__item__pic set-bg' : 'featured__item__pic'}
                     style={image ? { backgroundImage: `url(${image})` } : undefined}
                 >
+                    <Link className="product-card__open" to={`/product/${product.id}`} aria-label={product.name} />
                     {!image && (
                         <div className="product-emoji" style={{ fontSize: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                             {product.fallbackEmoji || '🛒'}
@@ -36,7 +39,7 @@ export function FeaturedCard({ product }: { product: Product }) {
                     </ul>
                 </div>
                 <div className="featured__item__text">
-                    <h6><a href="#cart" onClick={(event) => openPicker(event, setOpen)}>{product.name}</a></h6>
+                    <h6><Link to={`/product/${product.id}`}>{product.name}</Link></h6>
                     <h5>{money(product.price)}/{product.unit}</h5>
                     {isSoldByWeight(product.unit) && <p className="product-weight-note">Final weight can vary by about 100 g.</p>}
                 </div>
@@ -63,10 +66,11 @@ export function ProductCard({ product }: { product: Product }) {
     const outOfStock = !product.inStock;
     return (
         <div className="col-6 col-lg-4 col-md-6 col-sm-6" data-product-id={product.id}>
-            <div className={`product__item product-card${outOfStock ? ' product__item--out-of-stock' : ''}`} onClick={() => setOpen(true)}>
+            <div className={`product__item product-card${outOfStock ? ' product__item--out-of-stock' : ''}`}>
                 <div className="product__item__pic">
+                    <Link className="product-card__open" to={`/product/${product.id}`} aria-label={product.name} />
                     {image
-                        ? <img src={image} alt={product.name} loading="lazy" decoding="async" />
+                        ? <img src={image} alt="" loading="lazy" decoding="async" />
                         : <div className="product-emoji">{product.fallbackEmoji || '🛒'}</div>}
                     {outOfStock && <div className="out-of-stock-badge">Out of Stock</div>}
                     <ul className="product__item__pic__hover">
@@ -80,7 +84,7 @@ export function ProductCard({ product }: { product: Product }) {
                     </ul>
                 </div>
                 <div className="product__item__text">
-                    <h6><a href="#cart" onClick={(event) => openPicker(event, setOpen)}>{product.name}</a></h6>
+                    <h6><Link to={`/product/${product.id}`}>{product.name}</Link></h6>
                     <span>{product.unit}</span>
                     <h5>{outOfStock ? <span className="price-muted">{money(product.price)}</span> : money(product.price)}</h5>
                     {isSoldByWeight(product.unit) && <p className="product-weight-note">Final weight can vary by about 100 g.</p>}

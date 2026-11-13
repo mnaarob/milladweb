@@ -3,32 +3,12 @@ import { useMemo, useState } from 'react';
 import { FeaturedCard } from '../components/ProductCard';
 import { Hero } from '../components/Hero';
 import { api } from '../lib/api';
+import { MEAT_FILTERS, meatBucket, type MeatFilter } from '../lib/meat';
 import type { Product } from '../lib/types';
-
-type Filter = 'all' | 'beef' | 'chicken' | 'lamb' | 'seafood';
-
-const FILTERS: { id: Filter; label: string }[] = [
-    { id: 'all', label: 'All' },
-    { id: 'beef', label: 'Beef' },
-    { id: 'chicken', label: 'Chicken' },
-    { id: 'lamb', label: 'Lamb & Goat' },
-    { id: 'seafood', label: 'Seafood' },
-];
-
-function bucket(product: Product): Filter | null {
-    const sub = (product.subcategory || '').toLowerCase();
-    if (sub === 'beef' || sub === 'chicken' || sub === 'lamb' || sub === 'seafood') return sub as Filter;
-    if (sub === 'goat') return 'lamb';
-    const name = product.name.toLowerCase();
-    if (/fish|tilapia|mackerel|salmon|shrimp|prawns?|catfish|croaker|seafood|crab|lobster|squid|octopus|oyster|clam|tuna|sardine|anchovy/.test(name)) return 'seafood';
-    if (/chicken|turkey|poultry/.test(name)) return 'chicken';
-    if (/lamb|goat|mutton/.test(name)) return 'lamb';
-    if (/beef|oxtail|tongue|kidney|liver|steak|veal|mince/.test(name)) return 'beef';
-    return null;
-}
+import { BLOG_POSTS } from './BlogPage';
 
 export function HomePage() {
-    const [filter, setFilter] = useState<Filter>('all');
+    const [filter, setFilter] = useState<MeatFilter>('all');
     const featured = useQuery({
         queryKey: ['featured'],
         queryFn: () => api<Product[]>('/api/products/featured'),
@@ -37,7 +17,7 @@ export function HomePage() {
     const visible = useMemo(() => {
         const items = featured.data ?? [];
         if (filter === 'all') return items;
-        return items.filter((product) => bucket(product) === filter);
+        return items.filter((product) => meatBucket(product) === filter);
     }, [featured.data, filter]);
 
     return (
@@ -53,7 +33,7 @@ export function HomePage() {
                             </div>
                             <div className="featured__controls">
                                 <ul>
-                                    {FILTERS.map((item) => (
+                                    {MEAT_FILTERS.map((item) => (
                                         <li
                                             key={item.id}
                                             className={filter === item.id ? 'active' : ''}
@@ -88,12 +68,12 @@ export function HomePage() {
                             <div className="col-lg-4 col-md-4 col-sm-6" key={post.title}>
                                 <div className="blog__item">
                                     <div className="blog__item__pic">
-                                        <a href={post.href} target="_blank" rel="noopener noreferrer">
+                                        <a href={post.href}>
                                             <img src={post.image} alt={post.title} loading="lazy" decoding="async" />
                                         </a>
                                     </div>
                                     <div className="blog__item__text">
-                                        <h5><a href={post.href} target="_blank" rel="noopener noreferrer">{post.title}</a></h5>
+                                        <h5><a href={post.href}>{post.title}</a></h5>
                                         <p>{post.excerpt}</p>
                                     </div>
                                 </div>
@@ -105,24 +85,3 @@ export function HomePage() {
         </>
     );
 }
-
-const BLOG_POSTS = [
-    {
-        title: 'Understanding Halal Meat Quality',
-        href: '/blog/understanding-halal-meat-quality.html',
-        image: '/img/blog/blog01.webp',
-        excerpt: 'Learn about what makes quality halal meat and how to identify the best cuts for your cooking.',
-    },
-    {
-        title: '5 Tips for Perfect Biryani',
-        href: '/blog/perfect-biryani-tips.html',
-        image: '/img/blog/blog002.webp',
-        excerpt: 'Master the art of cooking authentic biryani with these simple tips from our expert chefs.',
-    },
-    {
-        title: 'Storing Fresh Meat Properly',
-        href: '/blog/storing-fresh-meat-properly.html',
-        image: '/img/blog/blog03.webp',
-        excerpt: 'Essential tips for keeping your meat fresh and safe, from freezing to thawing methods.',
-    },
-];

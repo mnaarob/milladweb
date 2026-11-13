@@ -5,6 +5,7 @@ import { Hero } from '../components/Hero';
 import { ProductCard } from '../components/ProductCard';
 import { Select } from '../components/Select';
 import { api } from '../lib/api';
+import { MEAT_FILTERS, meatBucket, type MeatFilter } from '../lib/meat';
 import type { Product } from '../lib/types';
 
 type Sort = 'default' | 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc';
@@ -25,7 +26,9 @@ export function ShopPage() {
     const category = params.get('category') || 'all';
     const query = (params.get('q') || '').trim().toLowerCase();
     const [sort, setSort] = useState<Sort>('default');
+    const [meat, setMeat] = useState<MeatFilter>('all');
     const [page, setPage] = useState(1);
+    const showMeat = category === 'all' || category === 'meat';
 
     const products = useQuery({
         queryKey: ['products'],
@@ -36,7 +39,9 @@ export function ShopPage() {
     const filtered = useMemo(() => {
         const items = (products.data ?? []).filter((product) => {
             if (category !== 'all' && product.category !== category) return false;
-            if (query && !product.name.toLowerCase().includes(query)) return false;
+            const haystack = `${product.name} ${product.description} ${product.subcategory}`.toLowerCase();
+            if (query && !haystack.includes(query)) return false;
+            if (showMeat && meat !== 'all' && meatBucket(product) !== meat) return false;
             return true;
         }).slice();
         if (sort === 'name-asc') items.sort((a, b) => a.name.localeCompare(b.name));
@@ -44,14 +49,18 @@ export function ShopPage() {
         else if (sort === 'price-asc') items.sort((a, b) => a.price - b.price);
         else if (sort === 'price-desc') items.sort((a, b) => b.price - a.price);
         return items;
-    }, [products.data, category, query, sort]);
+    }, [products.data, category, query, sort, meat, showMeat]);
 
     const totalPages = Math.max(1, Math.ceil(filtered.length / PRODUCTS_PER_PAGE));
 
     // Reset to the first page whenever the filter, search, or sort changes.
     useEffect(() => {
+        setMeat('all');
+    }, [category]);
+
+    useEffect(() => {
         setPage(1);
-    }, [category, query, sort]);
+    }, [category, query, sort, meat]);
 
     const safePage = Math.min(page, totalPages);
     const visible = useMemo(() => {
@@ -78,6 +87,19 @@ export function ShopPage() {
             <Hero />
 
             <section className="product spad">
+                {showMeat && (
+                    <div className="container">
+                        <div className="featured__controls shop-meat-filters">
+                            <ul>
+                                {MEAT_FILTERS.map((item) => (
+                                    <li key={item.id} className={meat === item.id ? 'active' : ''}>
+                                        <button type="button" onClick={() => setMeat(item.id)}>{item.label}</button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                )}
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">

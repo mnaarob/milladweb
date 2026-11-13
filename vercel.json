@@ -7,7 +7,6 @@
   "outputDirectory": "client/dist",
   "installCommand": "npm install",
   "redirects": [
-    { "source": "/index.html", "destination": "/", "permanent": true },
     { "source": "/shop.html", "destination": "/shop", "permanent": true },
     { "source": "/account.html", "destination": "/account", "permanent": true },
     { "source": "/admin.html", "destination": "/admin", "permanent": true },
